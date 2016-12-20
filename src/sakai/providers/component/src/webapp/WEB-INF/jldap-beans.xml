@@ -14,6 +14,11 @@
 		<property name="ldapHost">
 			<value>ldap.university.edu</value>
 		</property>
+		
+				<!-- Required. Ordenació dels resultats de cerques a ldap quan retorna més d'un compte amb el mateix uid basant la prioritat amb el tipus d'usuari  -->
+		<property name="priorityTypeList">
+			<value>personUdL,aluDOCTORAT,aluEXTERNS</value>
+		</property>
 
 		<!-- Optional. LDAP connection port. Typically defaults to 
 			JLDAPDirectoryProvider.DEFAULT_LDAP_PORT (389). Secured
@@ -210,8 +215,20 @@
 	<bean id="edu.amc.sakai.user.LdapAttributeMapper"
 			class="edu.amc.sakai.user.SimpleLdapAttributeMapper"
 			init-method="init">
-			
-		<!-- A typical set of attribute mappings. Keys are logical
+					
+		<property name="attributeMappings">
+			<map>
+				<entry key="login"><value>uid</value></entry>         
+				<entry key="firstName"><value>givenName</value></entry> 
+				<entry key="preferredFirstName"><value>givenName</value></entry>
+				<entry key="lastName"><value>sn</value></entry> 
+				<entry key="email"><value>mail</value></entry>
+				<entry key="dni"><value>carLicense</value></entry>  
+				<entry key="tipus"><value>employeeType</value></entry>
+				<entry key="b64:jpegPhoto"><value>jpegPhoto</value></entry>   
+			</map>
+		</property>			
+			<!-- A typical set of attribute mappings. Keys are logical
 		names expected by the application. Values are physical LDAP
 		attribute names. If not specified or empty, defaults to
 		AttributeMappingConstants.DEFAULT_ATTR_MAPPINGS. -->
@@ -239,8 +256,8 @@
 		on LDAP attributes. Defaults to an instance of EmptyStringUserTypeMapper -->
 		<property name="userTypeMapper">
 			<!-- Select one of the following beans -->
-			<ref bean="edu.amc.sakai.user.EmptyStringUserTypeMapper" />
-			<!-- ref bean="edu.amc.sakai.user.EntryAttributeToUserTypeMapper" /-->
+			<!--  <ref bean="edu.amc.sakai.user.EmptyStringUserTypeMapper" /> -->
+			<ref bean="edu.amc.sakai.user.EntryAttributeToUserTypeMapper" />
 			<!-- ref bean="edu.amc.sakai.user.EntryContainerRdnToUserTypeMapper" /-->
 			<!-- ref bean="edu.amc.sakai.user.StringUserTypeMapper" /-->
 		</property>
@@ -277,6 +294,25 @@
 	<bean id="edu.amc.sakai.user.EntryAttributeToUserTypeMapper"
 		class="edu.amc.sakai.user.EntryAttributeToUserTypeMapper">
 		
+		<property name="attributeValueToSakaiUserTypeMap">
+			<map>
+				<entry key="EPS"><value>aluEPS</value></entry> 
+				<entry key="ETSEA"><value>aluETSEA</value></entry> 
+				<entry key="FLL"><value>aluFLL</value></entry> 
+				<entry key="FI"><value>aluFI</value></entry> 
+				<entry key="EUI"><value>aluFI</value></entry>
+				<entry key="FM"><value>aluFM</value></entry> 
+				<entry key="FMED"><value>aluFM</value></entry>
+				<entry key="FDE"><value>aluFDE</value></entry>
+				<entry key="FCE"><value>aluFCE</value></entry>
+				<entry key="INEFC"><value>aluINEFC</value></entry>
+				<entry key="DOCTORAT"><value>aluDOCTORAT</value></entry>
+				<entry key="MOBILITAT"><value>aluMOBILITAT</value></entry> 
+				<entry key="EXTERNS"><value>aluEXTERNS</value></entry>
+				<entry key="PDIPAS"><value>personUdL</value></entry>
+			</map>
+		</property>
+		
 		<!-- Optional. If not present or empty, behavior is
 		determined by the value of returnLiteralAttributeValueIfNoMapping
 		(see below). -->
@@ -292,7 +328,7 @@
 		attribute mappings associated with this LdapAttributeMapper 
 		instance. -->
 		<property name="logicalAttributeName">
-			<value>groupMembership</value>
+			<value>tipus</value>
 		</property>
 				
 		<!-- Optional. Defaults to false -->
@@ -302,9 +338,9 @@
 				
 		<!-- Optional. Only considered if returnLiteralAttributeValueIfNoMapping
 			is false. Defaults to null. -->
-		<!--  property name="defaultSakaiUserType">
-			<null />
-		</property -->
+		 <property name="defaultSakaiUserType">
+			<value>altLDAP</value>
+		</property> 
 		
 	</bean>
 	
@@ -313,6 +349,9 @@
 		assigned map. -->
 	<bean id="edu.amc.sakai.user.EntryContainerRdnToUserTypeMapper"
 		class="edu.amc.sakai.user.EntryContainerRdnToUserTypeMapper">
+		
+		
+		
 		
 		<!-- Optional. Maps between container RDN values and Sakai user types -->
 		<!-- property name="rdnToSakaiUserTypeMap">

@@ -42,6 +42,8 @@ import org.sakaiproject.user.api.UserEdit;
 
 import com.novell.ldap.LDAPAttribute;
 import com.novell.ldap.LDAPEntry;
+import org.apache.commons.codec.binary.Base64;
+
 
 /**
  * Implements LDAP attribute mappings and filter generations using
@@ -297,6 +299,17 @@ public class SimpleLdapAttributeMapper implements LdapAttributeMapper {
             }
             attrValue = (String)(format.parse(attrValue, new ParsePosition(0))[0]);
         }
+        
+        //We check if b64 is needed
+        if (logicalAttrName.startsWith(AttributeMappingConstants.ENC_B64)) {
+			byte[] encoded = Base64.encodeBase64(attribute.getByteValue());
+			M_log.debug("mapLdapAttributeOntoUserData() preparing to map: [logical attr name = "
+					+ logicalAttrName
+					+ "][physical attr name = "
+					+ attribute.getName() + "][value = " 
+					+ new String(encoded));
+			attrValue = new String(encoded);
+		}
         
         if ( M_log.isDebugEnabled() ) {
         	M_log.debug("mapLdapAttributeOntoUserData() preparing to map: [logical attr name = " + logicalAttrName + 

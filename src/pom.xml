@@ -13,10 +13,10 @@
     <artifactId>base</artifactId>
     <packaging>pom</packaging>
 
-	<modules>
-		<module>sakai</module>
-		<!-- <module>udl</module>
-		<module>external</module> -->
-	</modules>
+    <modules>
+	<module>sakai</module>
+	<module>udl</module>
+	<!--<module>external</module> -->
+   </modules>
 
 </project>

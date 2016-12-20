@@ -12,16 +12,17 @@
   <artifactId>providers-base</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>allhands</module>
+    <!-- <module>allhands</module> -->
     <module>cm-authz-provider</module>
     <module>component</module>
     <module>federating</module>
     <module>imsent</module>
     <module>jldap</module>
-    <module>jldap-mock</module>
-    <module>kerberos</module>
-    <module>openldap</module>
+    <!-- <module>jldap-mock</module>-->
+    <!-- <module>kerberos</module>-->
+    <!-- <module>openldap</module>-->
     <module>sample</module>
+    <module>udl</module>
   </modules>
 
 
@@ -67,6 +68,11 @@
         <artifactId>sakai-jldap-provider-mock</artifactId>
         <version>${project.version}</version>
 <!-- <scope>test</scope> removed to fix build - Chuck -->
+      </dependency>
+             <dependency>
+        <groupId>cat.udl.asic.provider</groupId>
+        <artifactId>sakai-udl-provider</artifactId>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

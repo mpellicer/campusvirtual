@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,6 +196,19 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 	 * by passing them to {@link #mapLdapEntryOntoUserData(LDAPEntry)}, the
 	 * result of which is returned.
 	 */
+	
+	
+	
+	/**
+	 * Variable que estableix les prioritats
+	 */
+	private String priorityTypeList;
+	
+	/** UdL we need to create a filter wrapping to ensure that just one record is returned */ 
+	private String wrapFilter;
+	
+	
+	
 	protected LdapEntryMapper defaultLdapEntryMapper = new LdapEntryMapper() {
 
 		// doesn't update UserEdit in the off chance the search result actually
@@ -668,6 +683,14 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 					}
 					
 					String filter = ldapAttributeMapper.getManyUsersInOneSearch(usersToSearchInLDAP.keySet());
+					filter = wrapFilter (filter,true);
+					
+
+					if ( M_log.isDebugEnabled() ) {
+						M_log.debug("getUsers(): [filter = " + filter + 
+								"]");
+					}
+					
 					List<LdapUserData> ldapUsers = searchDirectory(filter, null, null, null, null, maxQuerySize);
 				
 					for (LdapUserData ldapUserData : ldapUsers) {
@@ -899,6 +922,10 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 			String searchBaseDn)
 	throws LDAPException {
 
+
+		filter = wrapFilter (filter,false);
+		
+		
 		if ( M_log.isDebugEnabled() ) {
 			M_log.debug("searchDirectoryForSingleEntry(): [filter = " + filter + 
 					"][reusing conn = " + (conn != null) + "]");
@@ -908,15 +935,44 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 				mapper,
 				searchResultPhysicalAttributeNames,
 				searchBaseDn, 
-				1);
+				0);
 		if ( results.isEmpty() ) {
 			return null;
+		}
+		
+		//filtre de preferències per escollir el millor compte d'usuari d'entre tots els candidats obtinguts a la cerca
+		if ( results.size() >1) {
+
+			LdapUserDataComparer comparator = new LdapUserDataComparer();
+			Collections.sort(results, comparator);		
 		}
 
 		return results.iterator().next();
 
 	}
 
+	public class LdapUserDataComparer implements Comparator<LdapUserData> {
+		  @Override
+		  public int compare(LdapUserData x, LdapUserData y) {
+			  
+			  String[] typesList = priorityTypeList.split(",");
+
+			  for (String tipus : typesList) {
+				  if(x.getType().equals(tipus))
+					  return -1;
+				  else if(y.getType().equals(tipus))
+					  return 1;
+			  }
+
+			  if(!x.getType().equals(""))
+				  return -1;
+			  else if(!y.getType().equals(""))
+				  return 1;
+			  return 0;
+		  }
+	}
+	
+	
 	/**
 	 * Execute a directory search using the specified filter
 	 * and connection. Maps each resulting {@link LDAPEntry}
@@ -1184,6 +1240,27 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 	public void setLdapUser(String ldapUser) {
 		this.ldapUser = ldapUser;
 	}
+	
+	public String getWrapFilter()
+	{
+		return wrapFilter;
+	}
+
+	public void setWrapFilter(String wrapFilter)
+	{
+		this.wrapFilter = wrapFilter;
+	}
+	
+	public String getPriorityTypeList()
+	{
+		return priorityTypeList;
+	}
+	
+	public void setPriorityTypeList(String priorityTypeList)
+	{
+		this.priorityTypeList = priorityTypeList;
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -1736,5 +1813,26 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 	{
 		this.searchAliases = searchAliases;
 	}
+	
+	private String wrapFilter (String filter,boolean many){
+		StringBuilder sb = new StringBuilder();
+
+		sb.append ("(&");
+		
+		if (wrapFilter!=null){
+			sb.append (wrapFilter);
+		}
+		if (!many){
+			sb.append ("(");
+		}
+		sb.append (filter);
+		sb.append (")");
+		if (!many){
+			sb.append (")");
+		}	
+		
+		return  sb.toString();
+	}
+	
 
 }
