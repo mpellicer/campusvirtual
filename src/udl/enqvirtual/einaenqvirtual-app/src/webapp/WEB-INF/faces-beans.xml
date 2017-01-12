@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+	
+	<!-- Bean d'aplicacio -->
+	<managed-bean>
+		<description>Controlador principal de l'aplicacio</description>
+		<managed-bean-name>MainCtl</managed-bean-name>
+		<managed-bean-class>
+			cat.udl.asic.app.einaenqvirtual.MainCtl
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+			<managed-property>
+					<property-name>getModelCtl</property-name>
+					<value>#{GetModelCtl}</value>
+			</managed-property>			
+	</managed-bean>
+	
+	<managed-bean>
+		<description>Controlador principal de l'aplicacio</description>
+		<managed-bean-name>GetModelCtl</managed-bean-name>
+		<managed-bean-class>
+			cat.udl.asic.app.einaenqvirtual.GetModelCtl
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+			<managed-property>
+					<property-name>m</property-name>
+					<value>#{Model}</value>
+			</managed-property>			
+			<managed-property>
+					<property-name>s</property-name>
+				<value>#{Components["cat.udl.asic.einaenqvirtual.api.EinaEnqVirtualService"]}</value>
+			</managed-property>
+	<!--		<managed-property>
+					<property-name>email</property-name>
+					<value></value>					
+			</managed-property>				
+			<managed-property>
+					<property-name>comentaris</property-name>
+					<value></value>					
+			</managed-property>
+	-->
+	</managed-bean>	
+	
+	<managed-bean>
+		<description>Guardar les respostes</description>
+		<managed-bean-name>GuardarBean</managed-bean-name>
+		<managed-bean-class>
+			cat.udl.asic.app.einaenqvirtual.GuardarBean
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>	
+	</managed-bean>
+
+
+
+
+
+
+</faces-config>

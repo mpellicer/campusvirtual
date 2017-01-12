@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<registration>
+
+	<tool
+			id="sakai.einaenqvirtual"
+			title="EnqVirtual"
+			description="EnqVirtual">
+			<configuration name="codimodel" value="" />
+			<configuration name="any" value="" />
+			<configuration name="emaildesti" value="" />
+			<configuration name="sql" value="" />
+	</tool>
+
+</registration>

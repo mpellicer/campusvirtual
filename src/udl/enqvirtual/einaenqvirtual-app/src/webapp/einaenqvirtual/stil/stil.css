@@ -1,0 +1,61 @@
+A.lnk:LINK {FONT-STYLE: italic; FONT-WEIGHT:bold; FONT-SIZE: 17px; FONT-FAMILY:Verdana,Helvetica; COLOR: #8E3F6C; text-decoration:none;}
+A.lnk:VISITED {FONT-STYLE: italic; FONT-WEIGHT:bold; FONT-SIZE: 17px; FONT-FAMILY:Verdana,Helvetica; COLOR: #8E3F6C; text-decoration:none;}
+A.lnk:HOVER {FONT-STYLE: italic; FONT-WEIGHT:bold; FONT-SIZE: 17px; FONT-FAMILY:Verdana,Helvetica; COLOR: #555555; text-decoration:underline;}
+
+
+
+
+
+
+
+
+
+
+body {font: 10pt verdana, tahoma, Times New Roman, helvetica, arial, sans-serif; color: black; }
+p {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica}
+b {font-weight: bold}
+
+h1 {font: 22pt verdana, tahoma, Times New Roman, arial, helvetica}
+h2 {font: 18pt verdana, tahoma, Times New Roman, arial, helvetica}
+h3 {font: bold 13pt verdana, tahoma, Times New Roman, arial, helvetica}
+h4 {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica}
+
+th {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif; color: black; font-weight: bold; line-height: 105%}
+td {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif; color: black}
+td.titol {font: bold 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+td.titolp {font: bold 8pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+td.text {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+blockquote {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif; color: #000000}
+
+
+
+
+a {font: 10px  verdana, tahoma, Times New Roman, helvetica, sans-serif, font-weight:bold; text-decoration: none}
+a.mailbox {font: 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif; text-decoration: none}
+a:link {color: #eeeecc}
+a:visited {color: #eeeecc}
+a:active {color: #eeeecc}
+
+a.entrar {font: bold 13pt verdana, tahoma, Times New Roman, arial, helvetica}
+a.entrar:link {color: #000000}
+a.entrar:visited {color: #000000}
+a.entrar:active {color: #000000}
+
+a.titol {font: bold 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+a.atitol {background-color:#5d7862; font: bold 10pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif; color: #eeeecc;}
+
+a.titol:link {color: #5d7862}
+a.titol:visited {color: #5d7862}
+a.titol:hover {color: #63013c}
+a.titol:active {color: #63013c}
+a.titol:focus {color: #eeeecc; background-color:#5d7862;}
+
+
+a.atmenu {font: bold 8pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+a.tmenu {font: bold 8pt verdana, tahoma, Times New Roman, arial, helvetica, sans-serif;}
+a.tmenu:link {color: #5d7862}
+a.tmenu:visited {color: #5d7862}
+a.tmenu:hover {color: #63013c}
+a.tmenu:active {color: #63013c}
+a.tmenu:focus {color: #eeeecc; background-color:#5d7862;}
+
