@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cat.udl.asic.actes</groupId>
+		<artifactId>sakai-actes</artifactId>
+		<version>1.4-SNAPSHOT</version>
+	</parent>
+	<name>Implementació del servei d'actes LDAP + JDBC</name>
+	<groupId>cat.udl.asic.actes</groupId>
+	<artifactId>sakai-actes-impl</artifactId>
+	<organization>
+		<name>Universitat de Lleida</name>
+		<url>http://www.udl.cat/</url>
+	</organization>
+	<inceptionYear>2008</inceptionYear>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>cat.udl.asic.actes</groupId>
+			<artifactId>sakai-actes-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
+
+	</dependencies>
+</project>

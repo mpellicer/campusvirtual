@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="es.udl.asic.api.app.actes.Actes" class="es.udl.asic.component.app.actes.ActesImpl"/>
+</beans>
+
+<!--  Ultima versió -->

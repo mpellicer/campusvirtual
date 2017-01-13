@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config>
+    <application>
+        <message-bundle>es.udl.asic.actes.bundle.Messages</message-bundle>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>de</supported-locale>
+            <supported-locale>fr</supported-locale>
+            <supported-locale>es</supported-locale>
+        </locale-config>
+    </application>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+
+        <navigation-case>
+            <from-outcome>main</from-outcome>
+            <to-view-id>/actes/main.jsp</to-view-id>
+        </navigation-case>
+    	 <navigation-case>
+            <from-outcome>mostraActa</from-outcome>
+            <to-view-id>/actes/mostraActa.jsp</to-view-id>
+        </navigation-case>
+
+    	 <navigation-case>
+            <from-outcome>mostraActaDesada</from-outcome>
+            <to-view-id>/actes/mostraActaDesada.jsp</to-view-id>
+        </navigation-case>
+    
+    </navigation-rule> 
+
+    <!-- =================== Tool Beans ============== -->
+
+	<managed-bean>
+        <description>Eina Actes</description>
+        <managed-bean-name>ActesTool</managed-bean-name>
+        <managed-bean-class>es.udl.asic.tool.actes.ActesTool</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope> 
+        
+       <managed-property>
+			<description>Service Dependency: Actes</description>
+			<property-name>actes</property-name>
+			<value>#{Components["es.udl.asic.api.app.actes.Actes"]}</value>
+			</managed-property>
+  	  </managed-bean> 
+
+ </faces-config>

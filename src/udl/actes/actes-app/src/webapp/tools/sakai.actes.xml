@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<registration>
+    <tool id="sakai.actes" helpUrl="/sakai-actes-tool/helpReg/profile_help.xml" title="Actes" description="Qualificació d'actes">    
+	    <configuration name="driver" value="" />
+		<configuration name="db" value="" />
+		<configuration name="anyaca" value="" />
+    </tool>
+</registration>
