@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sakai="http://sakaiproject.org/jsf/sakai"	
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/templates/layout.xhtml">
+
+	<ui:define name="body">	
+				
+  		<h:form id="menusakai">
+			<sakai:tool_bar>
+				<sakai:tool_bar_item
+					disabled="true"
+					action="task"
+					value="#{msgs.tareas}"/>
+				<sakai:tool_bar_item
+					action="criteria"
+					value="#{msgs.criteria}"/>
+				<sakai:tool_bar_item	
+					action="page"
+					value="#{msgs.paginas}"/>
+				<sakai:tool_bar_item
+					action="#{SyncBean.newTask}"
+					value="#{msgs.newtask}"/>				
+   	  		</sakai:tool_bar>
+	  	</h:form>
+	  			
+		<h:form id="list">	
+		  	
+			<rich:dataTable id="tasksList" value="#{SyncBean.tasksList}" var="task"
+				bgcolor="#AE1B2E" border="10" cellpadding="5" cellspacing="3"
+				first="0" width="100%" dir="LTR" frame="hsides" rules="all"
+				rendered="#{not empty SyncBean.tasksList}"
+				styleClass="detached"
+				columnClasses="iconColumn, iconColumn, iconColumn, nameColumn, textColumn, textColumn, iconColumn">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msgs.taskslist}" />
+				</f:facet>
+				
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+					<f:facet name="header">
+    					<h:outputText value=" " />
+  					</f:facet>
+  					<a4j:commandLink
+  						actionListener="#{SyncBean.changeTask}"
+  						render="tasksList"
+  						execute="@this"
+  						title="#{task.available? msgs.on : msgs.off}">  					 
+						<h:graphicImage alt="available" url="/images/#{task.available?'S':'N'}.gif"/>
+						<f:attribute name="task" value="#{task}"/>  
+					</a4j:commandLink>
+				</rich:column>		
+												
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+  					<f:facet name="header">
+    					<h:outputText value=" " />
+  					</f:facet>
+  					<h:commandLink 
+  						title="#{msgs.edit}"
+  						action="#{SyncBean.editTask}"
+  						actionListener="#{SyncBean.selectTask}">
+						
+						<h:graphicImage alt="#{msgs.edit}" url="/images/editar.gif"/>
+						<f:attribute name="task" value="#{task}"/>  
+					</h:commandLink>
+				</rich:column>
+				
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+				  	<f:facet name="header">
+    					<h:outputText value=" " />
+  					</f:facet>
+  					<h:commandLink
+  						title="#{msgs.del}"
+						onclick="if (!confirm('#{msgs.deltask}. #{msgs.seguro}')) return false;"
+  						action="#{SyncBean.removeTask}"
+  						actionListener="#{SyncBean.selectTask}"> 
+						<h:graphicImage alt="#{msgs.del}" url="/images/eliminar.gif"/>
+						<f:attribute name="task" value="#{task}"/>
+					</h:commandLink>
+				</rich:column>		
+
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">				
+  					<f:facet name="header">
+    					<h:outputText value="#{msgs.tipo}" />
+  					</f:facet>
+  					<h:outputText
+  						value="#{task.tipo}" 
+  						converter="#{SyncBean.siteTypeConverter}">
+					</h:outputText>
+					<h:outputText 
+						rendered="#{empty task.tipo}"
+						value="#{msgs.todos}">
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+  					<f:facet name="header">
+    					<h:outputText value="#{msgs.realms}" />
+  					</f:facet>
+				
+					<h:outputText
+						style="display:block" 
+						value="#{task.realmSite}" />
+					<h:outputText
+						rendered="#{empty task.realmSite}"
+						style="display:block" 
+						value="#{msgs.ninguno}" />						
+					<h:outputText
+						style="display:block"
+						value="#{task.realmSection}" />			
+					
+				</rich:column>
+				
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+  					<f:facet name="header">
+    					<h:outputText value="#{msgs.comments}"/>
+  					</f:facet>
+				
+					<h:outputText value="#{task.comments}" />	
+					
+				</rich:column>
+										
+				<rich:column styleClass="#{task.available?'Fila1':'Fila3'}">
+				  	<f:facet name="header">
+    					<h:outputText value=" " />
+  					</f:facet>
+  					<h:commandLink
+  						title="#{msgs.executetask}"
+  						action="#{SyncBean.execTask}"
+  						actionListener="#{SyncBean.selectTask}"> 
+						<h:graphicImage alt="#{msgs.executetask}" url="/images/exe.gif"/>
+						<f:attribute name="task" value="#{task}"/>
+					</h:commandLink>
+				</rich:column>		
+			
+			</rich:dataTable>
+			
+			<h:outputText value="#{msgs.notasks}"
+				rendered="#{empty SyncBean.tasksList}"/>
+			
+		</h:form>
+		
+	</ui:define>
+</ui:composition>	

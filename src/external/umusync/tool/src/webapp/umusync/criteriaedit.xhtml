@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sakai="http://sakaiproject.org/jsf/sakai"	
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/templates/layout.xhtml">
+
+	<ui:define name="body">	
+     
+		<h:form id="editCriteria">
+		
+			<sakai:tool_bar>
+				<sakai:tool_bar_item
+					action="#{SyncBean.saveCriteria}"
+					value="#{SyncBean.isNewCriteria ? msgs.b_criterianew : msgs.b_criteriaupd}"
+				/>
+				<sakai:tool_bar_item
+				 	value="#{msgs.b_rtn}" 
+					immediate="true"
+					action="#{SyncBean.returnFromCriteria}"
+				/>
+   	  		</sakai:tool_bar>	
+   	  		  									
+			<h:panelGrid id="Name" columns="3"  styleClass="detached">
+
+				<h:outputText value="#{msgs.criterianame} "/>				
+				<h:inputText id="criteriaName" required="true"
+					validator="#{SyncBean.criteriaNameValidator}"
+					value="#{SyncBean.criteriaName}">
+				</h:inputText>
+				<h:message styleClass="error" for="criteriaName"/>
+			
+			</h:panelGrid>
+			
+			<rich:dataTable id="criteriaTable" 
+							styleClass="dr-table rich-table"
+							headerClass="dr-table-subheadercell rich-table-subheadercell dr-table-subheader rich-table-subheader"							
+							columnClasses="dr-subtable-cell rich-subtable-cell"
+							footerClass="dr-table-footercell rich-table-footercell dr-table-footer rich-table-footer"
+							value="#{SyncBean.currentCriteriaList}"
+							var="criterion" >
+			
+			<f:facet name="header">
+				<h:panelGrid style="margin-left: auto; margin-right: auto; width:100%;"  
+					styleClass="dr-table-headercell rich-table-headercell dr-table-header rich-table-header"> 
+        			<h:outputText value="#{msgs.conditions}" />
+        		</h:panelGrid>
+			</f:facet> 
+
+			<rich:column>
+			  	<f:facet name="header">
+   					<h:outputText value=" "/>
+				</f:facet>
+				
+				<a4j:commandLink 
+					immediate="true"
+					render="criteriaTable"					
+					rendered="#{SyncBean.criteriaSize gt 1}"
+					execute="@form"
+					action="#{SyncBean.removeCriterion}"					
+					actionListener="#{SyncBean.selectCriterion}"> 
+					<h:graphicImage alt="#{msgs.del}" url="/images/eliminar.gif"/>
+					<f:attribute name="criterion" value="#{criterion}"/>
+				</a4j:commandLink>
+				<h:graphicImage 
+					rendered="#{SyncBean.criteriaSize eq 1}" 
+					alt="X" 
+					url="/images/eliminar-gris.gif"/>
+			</rich:column>
+
+			<rich:column>
+			  	<f:facet name="header">
+   					<h:outputText value="#{msgs.property}"/>
+				</f:facet>
+			
+				<h:inputText id="Property" required="true" value="#{criterion.property}">
+					<f:validator validatorId="SyncJpaValidator"/>
+				</h:inputText>
+
+				<h:message styleClass="error" for="Property"/>
+			</rich:column>
+			<rich:column>
+			  	<f:facet name="header">
+    				<h:outputText value="  "/>
+				</f:facet>	
+					<a4j:region>
+						<h:selectOneMenu value="#{criterion.comparador}">
+							<f:selectItems value="#{SyncBean.comparatorSelect}"/>
+							<a4j:ajax immediate="true" event="change" render="criteriaTable" execute="@form"/> 					
+						</h:selectOneMenu>
+					</a4j:region>
+			</rich:column>
+			<rich:column>
+			  	<f:facet name="header">
+    				<h:outputText value="#{msgs.value}"/>
+				</f:facet>					
+				<h:inputText id="Value" rendered="#{SyncBean.comparatorMap[criterion.comparador].arity eq 2}" 
+								required="true" value="#{criterion.valor}">
+					<f:validator validatorId="SyncJpaValidator"/>
+				</h:inputText>
+				<h:message styleClass="error" for="Value"/>
+			</rich:column>
+			
+			
+			<f:facet name="footer">
+        		<a4j:commandLink
+        			render="editCriteria"
+        			title="#{msgs.addc}"
+        			execute="@form"
+        			action="#{SyncBean.addNewCriterion}">
+					<h:graphicImage alt="#{msgs.add}" url="/images/plus.png"/>
+				</a4j:commandLink>
+			</f:facet> 
+			
+			</rich:dataTable>	
+
+			<h:panelGrid columns="2"  styleClass="detached">
+				<h:commandButton
+					value="#{SyncBean.isNewCriteria ? msgs.b_criterianew : msgs.b_criteriaupd}" 
+					action="#{SyncBean.saveCriteria}"
+					onclick="if (#{not SyncBean.isNewCriteria} &amp;&amp; !confirm('#{msgs.modcriteria} #{msgs.seguro}')) return false;"
+				/>
+				<h:commandButton immediate="true" value="#{msgs.b_rtn}" action="#{SyncBean.returnFromCriteria}"/>
+			</h:panelGrid>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
