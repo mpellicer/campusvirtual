@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 	
 	<modules>
-		<module>bbb</module>
+		<module>bbb-tool</module>
 		<module>umusync</module>
 	</modules>    
     
