@@ -591,6 +591,14 @@ public class SakaiProxyImpl implements SakaiProxy, Observer {
 		rosterMember.setDisplayName(user.getDisplayName());
 		rosterMember.setSortName(user.getSortName());
 
+		String propDNI = user.getProperties().getProperty("dni");
+		String dni = "";
+
+		if (propDNI !=null){
+			dni = propDNI;
+		}
+		rosterMember.setDni (dni);
+
 		for (Group group : groups) {
 			if (group.getMember(userId) != null) {
 			    rosterMember.addGroup(group.getId(), group.getTitle());

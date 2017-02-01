@@ -321,6 +321,8 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 
 			List<String> row = new ArrayList<String>();
 
+			row.add (member.getDni());
+
 			if (sakaiProxy.getFirstNameLastName()) {
 				row.add(member.getDisplayName());
 			} else {
@@ -350,6 +352,8 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 		for (RosterMember member : rosterMembers) {
 
 			List<String> row = new ArrayList<String>();
+
+			row.add (member.getDni());
 
 			if (sakaiProxy.getFirstNameLastName()) {
 				row.add(member.getDisplayName());
@@ -514,6 +518,7 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 			String viewType, String siteId) {
 		
 		List<String> header = new ArrayList<String>();
+		header.add("DNI");
 		header.add(parameters.get(KEY_FACET_NAME) != null ? parameters.get(
 				KEY_FACET_NAME).toString() : DEFAULT_FACET_NAME);
 		
