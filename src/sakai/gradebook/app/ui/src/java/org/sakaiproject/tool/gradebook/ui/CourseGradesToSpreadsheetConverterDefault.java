@@ -35,6 +35,8 @@ import org.sakaiproject.tool.gradebook.CourseGradeRecord;
 import org.sakaiproject.tool.gradebook.CourseGradesToSpreadsheetConverter;
 import org.sakaiproject.tool.gradebook.GradeMapping;
 import org.sakaiproject.tool.gradebook.jsf.FacesUtil;
+import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.user.api.UserNotDefinedException;
 
 /**
  *
@@ -72,6 +74,14 @@ public class CourseGradesToSpreadsheetConverterDefault implements CourseGradesTo
 						switch (StandardFields.valueOf(field)) {
 						case usereid:
 							row.add(student.getDisplayId());
+							break;
+
+						case dni:
+							try {
+								row.add(UserDirectoryService.getUser(student.getUserUid()).getProperties().getProperty("dni"));
+							} catch (UserNotDefinedException e) {
+								row.add("");
+							}
 							break;
 
 						case sortname:
@@ -127,7 +137,7 @@ public class CourseGradesToSpreadsheetConverterDefault implements CourseGradesTo
 
 	public enum StandardFields
 	{
-		usereid, sortname, finalscore, calculatedgrade, gradeoverride, coursegrade, lastmodifieddate;
+		usereid, dni, sortname, finalscore, calculatedgrade, gradeoverride, coursegrade, lastmodifieddate;
 
 	}
 }

@@ -74,6 +74,8 @@ import org.sakaiproject.tool.gradebook.jsf.FacesUtil;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.service.gradebook.shared.GradebookService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.user.api.UserNotDefinedException;
 
 /**
  * Backing bean for the visible list of assignments in the gradebook.
@@ -1030,6 +1032,7 @@ public class RosterBean extends EnrollmentTableBean implements Serializable, Pag
         
         headerRow.add(getLocalizedString("export_student_id"));
         headerRow.add(getLocalizedString("export_student_name"));
+        headerRow.add(getLocalizedString("export_dni"));
         
         for (Object gradableObject : gradableObjects) {
         	String colName = null;
@@ -1060,6 +1063,11 @@ public class RosterBean extends EnrollmentTableBean implements Serializable, Pag
         	List<Object> row = new ArrayList<Object>();
         	row.add(student.getDisplayId());
         	row.add(student.getSortName());
+        	try {
+        		row.add(UserDirectoryService.getUser(student.getUserUid()).getProperties().getProperty("dni"));
+        	} catch (UserNotDefinedException e) {
+        		row.add("");
+        	}
         	for (Object gradableObject : gradableObjects) {
         		Object score = null;
         		String letterScore = null;

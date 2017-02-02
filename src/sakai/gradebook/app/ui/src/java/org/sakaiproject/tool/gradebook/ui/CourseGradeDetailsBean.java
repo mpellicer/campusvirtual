@@ -76,6 +76,7 @@ public class CourseGradeDetailsBean extends EnrollmentTableBean {
     
     //Export Field data options
     private boolean includeUsereid;
+    private boolean includeDNI;
     private boolean includeSortname;
     private boolean includeCoursegrade;
     private boolean includeFinalscore;
@@ -104,6 +105,14 @@ public class CourseGradeDetailsBean extends EnrollmentTableBean {
     
     public boolean isIncludeUsereid() {
 		return includeUsereid;
+	}
+
+    public boolean isIncludeDNI() {
+		return includeDNI;
+	}
+
+	public void setIncludeDNI(boolean includeDNI) {
+		this.includeDNI = includeDNI;
 	}
 
 	public void setIncludeUsereid(boolean includeUsereid) {
@@ -408,6 +417,9 @@ public class CourseGradeDetailsBean extends EnrollmentTableBean {
 			if(standardExportFields.contains("usereid")){
 				setIncludeUsereid(true);
 			} 
+			if(standardExportFields.contains("dni")){
+				setIncludeDNI(true);
+			} 
 			if(standardExportFields.contains("sortname")){
 				setIncludeSortname(true);
 			}
@@ -436,6 +448,7 @@ public class CourseGradeDetailsBean extends EnrollmentTableBean {
         List<String> fields = new ArrayList<String>();
         if(includeSortname) fields.add("sortname");
         if(includeUsereid) fields.add("usereid");
+        if(includeDNI) fields.add("dni");
         if(includeFinalscore) fields.add("finalscore");
         if(includeCalculatedgrade) fields.add("calculatedgrade");
         if(includeLastmodifieddate) fields.add("lastmodifieddate");

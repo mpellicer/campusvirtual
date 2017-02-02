@@ -183,6 +183,10 @@
                             <h:outputLabel for="userid" value="#{msgs.course_grade_details_export_course_grades_options_userid}" />
                         </p>
                         <p>
+                            <h:selectBooleanCheckbox id="dni" value="#{courseGradeDetailsBean.includeDNI}"/>
+                            <h:outputLabel for="dni" value="#{msgs.course_grade_details_export_course_grades_options_dni}" />
+                        </p>
+                        <p>
                             <h:selectBooleanCheckbox id="finalscore" value="#{courseGradeDetailsBean.includeFinalscore}" />
                             <h:outputLabel for="finalscore" value="#{msgs.course_grade_details_export_course_grades_options_finalscore}" />
                         </p>

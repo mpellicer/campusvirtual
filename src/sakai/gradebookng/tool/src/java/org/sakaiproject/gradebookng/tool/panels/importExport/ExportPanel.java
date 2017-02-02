@@ -43,6 +43,7 @@ public class ExportPanel extends Panel {
 	ExportFormat exportFormat = ExportFormat.CSV;
 	boolean includeStudentName = true;
 	boolean includeStudentId = true;
+	boolean includeDNI = true;
 	boolean includeGradeItemScores = true;
 	boolean includeGradeItemComments = true;
 	boolean includeCourseGrade = false;
@@ -75,6 +76,15 @@ public class ExportPanel extends Panel {
 			protected void onUpdate(final AjaxRequestTarget ajaxRequestTarget) {
 				ExportPanel.this.includeStudentId = !ExportPanel.this.includeStudentId;
 				setDefaultModelObject(ExportPanel.this.includeStudentId);
+			}
+		});
+		add(new AjaxCheckBox("includeDNI", Model.of(this.includeDNI)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(final AjaxRequestTarget ajaxRequestTarget) {
+				ExportPanel.this.includeDNI = !ExportPanel.this.includeDNI;
+				setDefaultModelObject(ExportPanel.this.includeDNI);
 			}
 		});
 		add(new AjaxCheckBox("includeGradeItemScores", Model.of(this.includeGradeItemScores)) {
@@ -185,6 +195,9 @@ public class ExportPanel extends Panel {
 			if (!isCustomExport || this.includeStudentName) {
 				header.add(getString("importExport.export.csv.headers.studentName"));
 			}
+			if (!isCustomExport || this.includeDNI) {
+				header.add(getString("importExport.export.csv.headers.DNI"));
+			}
 
 			// get list of assignments. this allows us to build the columns and then fetch the grades for each student for each assignment from the map
 			final List<Assignment> assignments = this.businessService.getGradebookAssignments();
@@ -239,6 +252,9 @@ public class ExportPanel extends Panel {
 				}
 				if (!isCustomExport ||this.includeStudentName) {
 					line.add(studentGradeInfo.getStudentLastName() + ", " + studentGradeInfo.getStudentFirstName());
+				}
+				if (!isCustomExport || this.includeDNI) {
+					line.add(studentGradeInfo.getDNI());
 				}
 				if (!isCustomExport || this.includeGradeItemScores || this.includeGradeItemComments) {
 					assignments.forEach(assignment -> {
