@@ -764,7 +764,7 @@
 											<directory>target/${serverConfId}/tomcat/</directory>
 											<includes>
 												<include>bin/setenv.sh</include>
-												<include>tomcat/conf/context.xml</include>
+												<include>conf/context.xml</include>
 												<include>conf/server.xml</include>
 												<include>conf/tomcat-users.xml</include>
 												<include>conf/log4j.properties</include>
