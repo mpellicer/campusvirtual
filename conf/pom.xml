@@ -539,18 +539,6 @@
 											<value>${sakai.config.bbb.salt}</value>
 										</replacement>
 										<replacement>
-											<token>TOKEN_KALTURA_ADMIN_SECRET</token>
-											<value>${sakai.config.kaltura.admin.secret}</value>
-										</replacement>
-										<replacement>
-											<token>TOKEN_KALTURA_SECRET</token>
-											<value>${sakai.config.kaltura.secret}</value>
-										</replacement>
-										<replacement>
-											<token>TOKEN_KALTURA_PARTNERID</token>
-											<value>${sakai.config.kaltura.partnerid}</value>
-										</replacement>
-										<replacement>
 											<token>TOKEN-DATACOLLECTOR-DBDATASOURCE12-USER</token>
 											<value>${datacollector.dbdatasource12.user}</value>
 										</replacement>
