@@ -1,0 +1,29 @@
+.#{$namespace}portalWrapper{
+	color: $swapped-view-text-color;
+	&.swapped-view{
+		.#{$namespace}topHeader{
+			background: $swapped-view-primary;
+		}
+		.#{$namespace}siteHierarchy{
+		  background: $background-color-secondary;
+		  color: $background-color;
+		  a {
+		  	color: $background-color;
+		  }
+		}
+		#linkNav ul li.#{$namespace}sitesNav__menuitem{
+			& > a {
+				background: $swapped-view-primary;
+			}
+			
+			&.is-selected a{
+				background: $background-color-secondary;
+				color: $background-color;
+			}
+		}
+		
+		.okayNav__nav--invisible{
+			background: $swapped-view-primary;
+		}
+	}
+}

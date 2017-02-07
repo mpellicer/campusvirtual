@@ -1,0 +1,314 @@
+@import "base/compass";
+
+body{
+	background-color:  $tool-background-color;
+	color: 		 $text-color;
+	font-family: $font-family;
+	font-size: 	 $default-font-size !important; // Bootstrap Tool error
+	font-weight: $default-font-weight;
+	line-height: 1.55;					// http://practicaltypography.com/line-spacing.html
+	&.#{$namespace}portalBody.is-logged-out{
+		background-color:  $background-color;
+		border-top: 95px solid $primary-color;
+		padding: 75px 0 0 260px;
+		@media #{$phone}{
+			border-top: 100vh solid $primary-color;
+			padding: 75px 0 0 0;
+		}
+		&:before{
+		    content: " ";
+		    height: 419px;
+		    display: block;
+		    position: absolute;
+		    top: -194px;
+		    left: -51px;
+		    background: #612045;
+		    box-shadow: inset 0px 0px 7px 0px rgba(87, 13, 55, 0.5);		
+			@media #{$desktop}{
+		    	width: 374px;
+		    	transform: rotate(72deg);	
+			}
+			@media #{$phone}{
+				content: " ";
+				height: 75vh;
+				top: 0;
+				left: 0;
+				background: #612045;
+				box-shadow: inset 0px 0px 7px 0px rgba(87,13,55,0.5);
+				right: 0;
+				clip-path: polygon(0 0%, 55% 0, 100% 76.6%, 0% 100%);
+			}
+		}
+		&:after{
+			content: " ";
+			background-image: url('images/bg_udl.jpg');
+			background-repeat: no-repeat;
+			background-size: cover;
+			position: fixed;
+		    top: 0;
+		    z-index: -100;
+		    left: 0;
+		    width: 265px;
+		    bottom: 0;
+			@media #{$tablet}{
+				display: none;
+			}
+		}
+	}
+}
+
+#sociallinks{
+	position: absolute;
+    z-index: 9999;
+    height: 40px;
+	width: 149px;
+	top: 152px;
+	left: 12px;
+    @media #{$desktop}{
+    }
+    @media #{$phone}{
+    	bottom: 80px;
+		top: auto;
+    	width: 100%;
+    	text-align: center;
+    	left: 0;
+    	right: 0;
+    }
+	ul{
+		list-style: none;
+		margin:  0 0 0 0;
+		padding: 0 0 0 0;
+		li{
+			display: inline-block;
+			line-height: 1;
+			font-size: 2.4em;
+			margin: 0 0 0 0.2em;
+			.fa{
+				&.fa-twitter-square,  &.fa-twitter-square:hover { color: #fff; }
+				&.fa-facebook-square, &.fa-facebook-square:hover{ color: #fff; }
+				&.fa-youtube-square,  &.fa-youtube-square:hover { color: #fff; }
+			}
+		}
+	}
+}
+
+.#{$namespace}headerLogo{
+	background: url($logo) no-repeat center center;
+	background-size: auto 100%;
+	height: 70px;
+	left: 10px;
+	margin: 0 auto;
+	overflow: hidden;
+	position: absolute;
+	top: 10px;
+	width: 313px;
+	z-index: 9999;
+	@media #{$phone}{
+		left: 5%;	
+		top: 10px;
+		width: 90%;
+		background-size: contain;
+	}
+}
+
+a{
+	color: $text-color;
+	&:hover{  // This means a:hover
+		color: $text-color;
+		text-decoration: none;
+	}
+	&[href]{  // This means a[href]
+		color: $link-color;
+		background-color: $link-background-color;
+		&:focus, &::-moz-focus-inner{ // This would compile to -> a[href]:focus, a[href]::moz-focus-inner
+			outline-color: invert;
+		}
+		&:hover{
+			color: $link-hover-color;
+			background-color: $link-hover-background-color;
+			text-decoration:underline;
+			table & {
+				color: darken( $breadcrumbs-tool-color, 5% );
+			}
+		}
+		&:active{
+			color: $link-active-color;
+			background-color: $link-active-background-color;
+		}
+		&.btn{
+			text-decoration: none;
+		}
+		&.btn-primary{
+			@include sakai_button_color( $button-color-background-color, $button-color-border-color, $button-color-text-color, $button-color-background-secondary-color );
+		}
+		text-decoration:underline;	
+		table & {
+			color: $breadcrumbs-tool-color;
+		}
+	}
+	&.url{
+		@media #{$phone}{
+		    display: block;
+			max-width: 100%;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		    white-space: nowrap;
+		}
+	}
+}
+
+input, textarea{
+	color: $text-color;
+	font-family: $font-family;
+	font-size: 	 $default-font-size;
+	max-width: 100%;
+}
+
+form, table{
+	textarea{
+		@media #{$phone}{
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+}
+
+h1, h2, h3, h4, h5, h6{
+	color: #212121;
+	font-family: $header-font-family;
+	font-weight: $header-font-weight;
+	line-height: 1.05;
+	margin: 0.75em 0 0.5em 0;
+}
+
+h4{
+	font-size: #{$default-font-size + 2};
+}
+
+.skip{
+	display: none;
+}
+
+input[type="submit"],input[type="button"]{
+	@extend .button_color;
+}
+
+input[type="reset"],input[type="button"]{
+	@extend .button_color;
+}
+
+input[type="checkbox"], input[type="radio"]{
+	background-color: #FFF;
+	border: 1px solid #A0A0A0;
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+	vertical-align: sub;
+	@include appearance(none);
+	&:checked{
+		border: 1px solid #60b3e3;
+	}
+	//SAK-30977
+	&[disabled],&[disabled="disabled"],&[disabled="true"]{
+		opacity: 0.8;
+		& + label{
+			color: lighten($text-color, 10%);
+		}
+	}
+}
+
+label.disabled{
+	color: lighten($text-color, 10%);
+	cursor: not-allowed;
+}
+
+input[type="checkbox"]{
+	@include border-radius(3px);
+	&:checked{
+		background-image: url("images/check.png");
+		background-size: 16px;
+	}
+}
+input[type="radio"]{
+	@include border-radius(24px);
+	&:checked{
+		background: radial-gradient(#60b3e3, #FFF 5px);
+	}
+}
+
+select{
+	@extend .select;
+}
+
+.is-hidden{
+	display: none;
+}
+
+strong, b{
+	font-weight: 700;
+}
+
+i, em{
+	font-style: italic;
+}
+
+u, ins {
+	text-decoration: underline;
+}
+
+s, strike, del {
+	text-decoration: line-through;
+}
+
+legend{
+	padding: 0.5em 0 0.1em 0;
+	margin-bottom: 0;
+}
+
+ul, ol{
+	list-style: none;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+}
+
+.portletBody{
+	ul{
+		list-style: square;
+		padding: 0 0 0 1.2em;
+		&.synopticList{
+			list-style: none;
+			padding: 0 0 0 0;
+		}
+	}
+	ol{
+		list-style: decimal;
+		padding: 0 0 0 1.2em;
+	}
+}
+
+input[type="submit"][disabled="disabled"],
+input[type="button"][disabled="disabled"],
+input[type="submit"][disabled="true"],
+input[type="button"][disabled="true"],
+input[type="submit"][disabled],
+input[type="button"][disabled],
+input[type="submit"][class="disabled"],
+input[type="button"][class="disabled"],
+input[type="submit"][disabled="disabled"]:hover,
+input[type="button"][disabled="disabled"]:hover,
+input[type="submit"][disabled="true"]:hover,
+input[type="button"][disabled="true"]:hover,
+input[type="submit"][disabled]:hover,
+input[type="button"][disabled]:hover,
+input[type="submit"][class="disabled"]:hover,
+input[type="button"][class="disabled"]:hover,
+button[disabled]:hover,
+button[class="disabled"]:hover,
+.formButtonDisabled, .formButtonDisabled:hover {
+	background: transparent linear-gradient(#EEE 0%, #EEE 100%) repeat scroll 0% 0% !important;
+	color: #333 !important;
+	border: 1px solid #DDD !important;
+	box-shadow: none !important;
+	cursor: not-allowed;
+	text-decoration: none;
+}

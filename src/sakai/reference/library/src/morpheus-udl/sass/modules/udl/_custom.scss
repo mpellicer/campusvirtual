@@ -1,0 +1,51 @@
+#udlheader{
+	background: #fbfbfb;
+	padding: 2px 6px;
+	@media #{$phone}{
+		display: none;
+	}
+	.#{$namespace}headerLogo{
+		overflow: 	hidden;
+		padding: 0;
+		margin: 0 1em 0 0;
+		text-align: left;
+		width: 		auto;
+		.#{$namespace}headerLogo--institution{
+			background: url($logo) no-repeat center left;
+			background-size: auto 100%;
+			width: 		166px;
+			height: 	31px;
+			display:	inline-block;
+			position: relative;
+			top: 2px;
+			margin: 0 0 0 4px;
+			@media #{$phone}{
+				margin: 0.2em 0 0 0.2em;
+				float: none;
+			}
+		}
+	}
+}
+
+#sociallinks{
+	float: right;
+	position: relative;
+	right: 0;
+	margin: 6px 6px 0 0px;
+	ul{
+		list-style: none;
+		margin:  0 0 0 0;
+		padding: 0 0 0 0;
+		li{
+			display: inline-block;
+			line-height: 1;
+			font-size: 1.6em;
+			margin: 0 0 0 0.2em;
+			.fa{
+				&.fa-twitter-square,  &.fa-twitter-square:hover { color: #55acee; }
+				&.fa-facebook-square, &.fa-facebook-square:hover{ color: #3b5999; }
+				&.fa-youtube-square,  &.fa-youtube-square:hover { color: #cd201f; }
+			}
+		}
+	}
+}

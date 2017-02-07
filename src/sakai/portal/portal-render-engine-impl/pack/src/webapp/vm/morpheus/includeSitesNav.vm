@@ -13,7 +13,21 @@
                             <span class="Mrphs-sitesNav__menuitem--myworkspace-label">${rloader.sit_mywor}</span>
                             <span class="Mrphs-sitesNav__drop" tabindex="-1" data-site-id="${site.siteId}"></span>
                         </a>
-                    </li>           
+                    </li> 
+                    #if ($quickLinks)
+                        #foreach($quickLink in $quickLinks)
+                            <li class="Mrphs-quickLinksNav__submenuitem Mrphs-sitesNav__menuitem Mrphs-sitesNav__menuitem--myworkspace">
+                                <a role="menuitem" href="${quickLink.url}" title="$quickLink.title">
+                                    #if(${quickLink.iconType} == "image")
+                                        <span id="quicklink-icon" style="background-image:url(${quickLink.imageURI})"></span>
+                                    #elseif (${quickLink.iconType} == "icon")
+                                        <i id="quicklink-icon" class="${quickLink.iconClass}"></i>
+                                    #end
+                                    <span class="Mrphs-sitesNav__menuitem--myworkspace-label">${quickLink.name}</span>
+                                </a>
+                            </li>
+                        #end
+                    #end ## quicklinks          
                 #end ## END of IF (${site.isMyWorkspace})
 
                 ## Only show other sites if they're the current site, a favorite of the current user, or if there *is* no current user and we're showing Gateway sites.
@@ -24,7 +38,6 @@
                         </a>
                         <a class="Mrphs-sitesNav__dropdown" href="#" data-site-id="${site.siteId}" role="separator"></a>
                     </li>
-
                 #end ## END of IF (${site.isMyWorkspace})
 
             #end ## END of FOREACH ( $site in $tabsSites.tabsSites )

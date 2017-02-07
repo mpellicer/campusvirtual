@@ -1,0 +1,114 @@
+.navIntraTool{
+	margin: -14px -14px 0 -14px;
+	//background: $tool-background-color;
+	border-bottom: 1px solid $tool-border-color;
+	padding: 0 170px 0 1em;
+	min-height: 40px;
+	@media #{$phone}{
+		padding: 0.3em 0.7em;
+		//max-width: 100%;
+	}
+	&:after{
+		content: " ";
+		display: block;
+		width: 100%;
+	}
+	li{
+		display: inline-block;
+		margin: 0 0 0 0;
+		span{
+			display: inline;
+			a{
+				letter-spacing: 1.5px;
+				text-transform: uppercase;
+				text-decoration: none;
+				@include sakai_button( $button-background-color, $button-border-color, $button-text-color, $button-background-secondary-color );
+				position: relative;
+    			top: -0.1em;
+			}
+			&.current{
+				@include sakai_button_color( $primary-color, $button-color-border-color, $button-color-text-color, $button-color-background-secondary-color );
+				background: linear-gradient( $primary-color, $primary-color );
+				border: 1px solid $primary-color;
+				color: #FFF !important;
+				text-transform: uppercase;
+				position: relative;
+    			top: -1px;
+				&:hover{
+					background: linear-gradient( $primary-color, $primary-color );
+				}
+				
+				a{
+					background: none;
+				    border: 0px none;
+				    font-size: 1em;
+				    margin: 0 0 0 0;
+				    padding: 0 0 0 0;
+				    top: 1px;
+				    color: inherit !important;
+				}
+			}
+			&.inactive{
+				opacity: 0.5;
+				border-left: 0px none;
+			}
+		}
+		a{
+			
+			&.current{
+			}
+		}
+		.searchField{
+			
+		}
+	}
+}
+
+.instruction{
+	@include bs-callout(#427ce8, #f3f7ff );
+}
+
+.listNav{
+	margin: 1em 0;
+	.inlineForm{
+		display: inline-block;
+		@media #{$phone}{
+			display: table-cell;
+			padding: 0.1em !important;
+			&[name="pagesizeForm"]{
+				text-align: center;
+			}
+			select{
+				width: 100%;
+			}
+			input[type="submit"]{
+				margin: 0 0 0 0;
+				&[disabled="disabled"]{
+					display: none;
+				}
+			}
+		}
+		legend{
+			display: none;
+		}
+		
+		fieldset{
+			display:inline-block;
+		}
+	}
+}
+
+.viewNav{
+
+}
+
+.navPanel {
+	.floatLeft {
+		float: left;
+		padding: 1em;
+	}
+
+	.floatRight {
+		float: right;
+	}
+}
