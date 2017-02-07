@@ -498,18 +498,18 @@
 								<configuration>
 									<force>true</force>
 									<nosuffix>true</nosuffix>
-									<sourceDirectory>${project.build.directory}/js/</sourceDirectory>
-									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target2}/js/</outputDirectory>
+									<!-- sourceDirectory>${project.build.directory}/js/</sourceDirectory 
+									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target2}/js/</outputDirectory -->
 									<aggregations>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.scripts.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source2}/js/morpheus.scripts.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source2}/js/src/</inputDir>
 											<includes>
 												<include>**/*.js</include>
 											</includes>
 										</aggregation>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.plugins.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source2}/js/morpheus.plugins.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source2}/js/plugins/</inputDir>
 											<includes>
 												<include>**/*.js</include>
@@ -528,18 +528,18 @@
 								<configuration>
 								<force>true</force>
 									<nosuffix>true</nosuffix>
-									<sourceDirectory>${project.build.directory}/js/</sourceDirectory>
+									<sourceDirectory>${project.build.directory}/${sakai.skin.source2}/js/</sourceDirectory>
 									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target2}/js/</outputDirectory>
 									<aggregations>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.scripts.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source2}/js/morpheus.scripts.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source2}/js/src/</inputDir>
 											<includes>
 												<include>**/*.js</include>
 											</includes>
 										</aggregation>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.plugins.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source2}/js/morpheus.plugins.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source2}/js/plugins/</inputDir>
 											<includes>
 												<include>**/*.js</include>
@@ -560,18 +560,18 @@
 								<configuration>
 									<force>true</force>
 									<nosuffix>true</nosuffix>
-									<sourceDirectory>${project.build.directory}/js/</sourceDirectory>
-									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target3}/js/</outputDirectory>
+									<!-- sourceDirectory>${project.build.directory}/js/</sourceDirectory>
+									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target3}/js/</outputDirectory --> 
 									<aggregations>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.scripts.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source3}/js/morpheus.scripts.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source3}/js/src/</inputDir>
 											<includes>
 												<include>**/*.js</include>
 											</includes>
 										</aggregation>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.plugins.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source3}/js/morpheus.plugins.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source3}/js/plugins/</inputDir>
 											<includes>
 												<include>**/*.js</include>
@@ -590,18 +590,18 @@
 								<configuration>
 								<force>true</force>
 									<nosuffix>true</nosuffix>
-									<sourceDirectory>${project.build.directory}/js/</sourceDirectory>
+									<sourceDirectory>${project.build.directory}/${sakai.skin.source3}/js/</sourceDirectory>
 									<outputDirectory>${basedir}/src/webapp/skin/${sakai.skin.target3}/js/</outputDirectory>
 									<aggregations>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.scripts.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source3}/js/morpheus.scripts.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source3}/js/src/</inputDir>
 											<includes>
 												<include>**/*.js</include>
 											</includes>
 										</aggregation>
 										<aggregation>
-											<output>${project.build.directory}/js/morpheus.plugins.min.js</output>
+											<output>${project.build.directory}/${sakai.skin.source3}/js/morpheus.plugins.min.js</output>
 											<inputDir>${basedir}/src/${sakai.skin.source3}/js/plugins/</inputDir>
 											<includes>
 												<include>**/*.js</include>
