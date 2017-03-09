@@ -630,6 +630,10 @@
 											<token>TOKEN_MAIL_TEST</token>
 											<value>${sakai.config.test.email}</value>
 										</replacement>
+										<replacement>
+											<token>TOKEN-STARTSCHEDULER</token>
+											<value>${sakai.scheduler.start}</value>
+										</replacement>
 										
 									</replacements>
 								</configuration>
