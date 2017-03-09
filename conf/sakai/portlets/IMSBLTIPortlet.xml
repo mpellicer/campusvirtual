@@ -20,7 +20,7 @@
                 <configuration name="imsti.tooltitle" value="Guia docent UdL" />
                 <configuration name="imsti.newpage" value="off"/>
                 <configuration name="imsti.maximize" value="false" />
-                <configuration name="imsti.frameheight" />
+                <configuration name="imsti.frameheight" value="3100" />
                 <configuration name="imsti.debug" value="false" />
                 <configuration name="imsti.releasename" value="true"/>  
                 <configuration name="imsti.releaseemail" value="false"/> 
