@@ -645,6 +645,7 @@
 									<includes>
 										<include>tomcat/bin/setenv.sh</include>
 										<include>tomcat/conf/context.xml</include>
+										<include>tomcat/conf/catalina.properties</include>
 										<include>tomcat/conf/server.xml</include>
 										<include>tomcat/conf/tomcat-users.xml</include>
 										<include>tomcat/conf/log4j.properties</include>
@@ -754,6 +755,7 @@
 											<includes>
 												<include>bin/setenv.sh</include>
 												<include>conf/context.xml</include>
+												<include>conf/catalina.properties</include>
 												<include>conf/server.xml</include>
 												<include>conf/tomcat-users.xml</include>
 												<include>conf/log4j.properties</include>
