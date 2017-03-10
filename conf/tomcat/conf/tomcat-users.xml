@@ -40,7 +40,8 @@
   <role rolename="poweruser"/>
   <role rolename="poweruserplus"/>
   <role rolename="probeuser"/>
+  <role rolename="manager-gui" />
   
-  <user username="TOKEN_PROBE_PSI_USERNAME" password="TOKEN_PROBE_PSI_PASSWORD" roles="poweruserplus,poweruser,probeuser"/>
+  <user username="TOKEN_PROBE_PSI_USERNAME" password="TOKEN_PROBE_PSI_PASSWORD" roles="manager-gui"/>
 
 </tomcat-users>
