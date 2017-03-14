@@ -691,7 +691,7 @@ public class JLDAPDirectoryProvider implements UserDirectoryProvider, LdapConnec
 								"]");
 					}
 					
-					List<LdapUserData> ldapUsers = searchDirectory(filter, null, null, null, null, maxQuerySize);
+					List<LdapUserData> ldapUsers = searchDirectory(filter, null, null, null, null, 0);
 				
 					for (LdapUserData ldapUserData : ldapUsers) {
 						String ldapEid = ldapUserData.getEid();
