@@ -100,7 +100,7 @@
     		   protocol="AJP/1.3" 
     		   redirectPort="8443" 
     		   URIEncoding="UTF-8" 
-    	 	   connectionTimeout="20000"
+    	 	   connectionTimeout="60000"
                maxThreads="250"
                minSpareThreads="25"
                maxSpareThreads="75"
