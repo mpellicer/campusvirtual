@@ -420,7 +420,7 @@ public class PortletIFrame extends GenericPortlet {
 		String special = getSpecial(config);
 		
 		//Canvi udl per que l'eina actes sempre l'obri en mode popup
-		if (special!= null && SPECIAL_ACTES.equals(special)){
+		if (special!= null && (SPECIAL_ACTES.equals(special) || SPECIAL_EXPEDIENT.equals(special))){
 			return true;
 		}
 		
