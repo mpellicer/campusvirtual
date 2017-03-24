@@ -1440,13 +1440,22 @@ public void processChangeSelectView(ValueChangeEvent eve)
 	    //set prev/next topic details
 	    PrivateForum pf = forumManager.getPrivateForumByOwnerAreaNull(getUserId());
 	    
+	    
 	    if (pf == null)
 	    {
 	    	initializePrivateMessageArea();
 	    }
 	    else
 	    {
-	    	pvtTopics = pf.getTopics();
+	    	try {
+	    		pvtTopics = pf.getTopics();
+	    	}catch (Exception lie){
+	    		// we must reinitialize the query
+	    		LOG.debug("initializeFromSynoptic(), topics failed trying to get them again forcing it");
+	    		pf = forumManager.forceGetTopics (pf);
+	    		pvtTopics = pf.getTopics();
+	    	}
+	    	
 	    	forum = pf;
 	    }
 

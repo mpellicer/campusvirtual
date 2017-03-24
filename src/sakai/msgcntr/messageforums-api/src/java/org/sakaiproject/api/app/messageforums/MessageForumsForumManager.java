@@ -201,6 +201,8 @@ public interface MessageForumsForumManager {
 
     public PrivateForum getPrivateForumByOwnerAreaNull(final String owner);
     
+    public PrivateForum forceGetTopics(PrivateForum pf);
+    
     public List getForumByTypeAndContextWithTopicsMembership(final String typeUuid, final String contextId);
     
     /**

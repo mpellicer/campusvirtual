@@ -607,6 +607,22 @@ public class MessageForumsForumManagerImpl extends HibernateDaoSupport implement
       return (PrivateForum) getHibernateTemplate().execute(hcb);
     }
     
+    public PrivateForum forceGetTopics(PrivateForum pv) {
+
+    	Session session = getSessionFactory().openSession();
+    	session.beginTransaction();
+    	LOG.debug("forceGetTopics executing with pv from owner: " + pv.getOwner());
+    	
+    	try {
+    		pv = getPrivateForumByOwnerAreaNull (pv.getOwner());
+    		Hibernate.initialize (pv.getTopicsSet());
+    		return pv;
+	    }
+    	finally {
+	        session.close();
+	    }
+    }
+    
     public BaseForum getForumByIdWithAttachments(final Long forumId) {
       
       if (forumId == null) {
