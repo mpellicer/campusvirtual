@@ -25,6 +25,11 @@
 
         $('.roster-print-button').click(function (e) {
 
+			var button = $(this);
+
+			button.prop('disabled', true);
+			$('.roster-print-button').prepend ('<span class="spincircle fa fa-circle-o-notch fa-spin"></span>');
+
             e.preventDefault();
             roster.renderMembership({
                 renderAll: true,
@@ -32,6 +37,8 @@
                 callback: function () {
                     //$(window).on('load', function () {
                     $('#roster-members').waitForImages(function () {
+						$('.spincircle').remove();
+						button.prop('disabled', false);
                         window.print();
                     });
                 }
