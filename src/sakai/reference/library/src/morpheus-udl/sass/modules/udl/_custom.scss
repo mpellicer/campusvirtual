@@ -54,3 +54,10 @@
 	/* Margen en la parte superior para la herramienta de Guías docentes */
 	margin: 35px 10px 0 15px;
 }
+
+
+.#{$namespace}sakai-guiadocent-ice {
+	.#{$namespace}toolTitleNav__link--edit {
+		display:none;
+	}
+}
