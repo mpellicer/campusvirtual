@@ -1663,7 +1663,7 @@ public class AnnouncementAction extends PagedResourceActionII
 									channelIdStrArray.add(channeIDD);
 								}
 							} catch(Exception e) {
-								M_log.warn(e.getMessage());
+								//M_log.warn(e.getMessage());
 							}
 						}
 						if (channelIdStrArray.size()>0) {
