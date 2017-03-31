@@ -1264,6 +1264,11 @@ public class SpreadsheetUploadBean extends GradebookDependentBean implements Ser
 
         while (assignIter.hasNext()) {
         	String assignmentName = (String) assignIter.next();
+        	// si hi ha columna DNI la descartem MSONZE-131
+        	if (assignmentName.contains("DNI")) {  
+        		assignmentName = (String) assignIter.next();
+        		index++;
+        	}
         	String pointsPossibleAsString = null;
 
         	String [] parsedAssignmentName = assignmentName.split(" \\[");
@@ -1430,7 +1435,7 @@ public class SpreadsheetUploadBean extends GradebookDependentBean implements Ser
     		FacesUtil.addErrorMessage(getLocalizedString("gb_setup_no_grade_entry_scale"));
     		return false;
     	}
-
+    	int dniColumn = 0;
     	// determine the index of the "cumulative" column
     	int indexOfCumColumn = -1;
     	if (assignmentHeaders != null && !assignmentHeaders.isEmpty()) {
@@ -1453,7 +1458,10 @@ public class SpreadsheetUploadBean extends GradebookDependentBean implements Ser
     	                FacesUtil.addErrorMessage(getLocalizedString("import_assignment_duplicate_titles", new String[] {assignmentName}));
     	                return false;
     	            }
-
+    	         // MSONZE-131 si hi ha columna DNI evitem que la consideri un exercici
+    	            if (assignmentName.contains("DNI")) {
+    	            	dniColumn = 1;
+    	            }
     	            assignmentNames.add(assignmentName);
     		    }
     		}
@@ -1478,9 +1486,10 @@ public class SpreadsheetUploadBean extends GradebookDependentBean implements Ser
         		}
     		}
     		
-    		// start with col 2 b/c the first two are eid and name
-    		if (studentScores != null && studentScores.size() > 2) {
-    			for (int i=2; i < studentScores.size(); i++) {
+    		// start with col 2 b/c the first two are eid and name 
+    		// +dniColumn per si hi ha columna DNI MSONZE-131
+    		if (studentScores != null && studentScores.size() > (2+dniColumn)) {
+    			for (int i=(2+dniColumn); i < studentScores.size(); i++) {
     				if (i == indexOfCumColumn)
     					continue;
 
