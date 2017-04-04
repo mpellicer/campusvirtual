@@ -685,7 +685,7 @@ public class LDAPDirectoryService implements DirectoryService {
 				
 				
 			}catch (Exception exe){
-				System.out.println("No s'ha pogut obtenir el password");
+				//System.out.println("No s'ha pogut obtenir el password");
 				try{ 
 					codi = attrs.get("telexNumber").get().toString();
 					if (codi.equals("")){
