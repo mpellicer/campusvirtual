@@ -42,6 +42,7 @@
             itemHidden: function() {},
             itemDisplayed: function() {}
         };
+    var self = null;    
 
     // Begin
     function Plugin(element, options) {
