@@ -457,7 +457,7 @@ public class ActivaTool{
 				//Tot quadra
 				if	(dadesPersonals!=null) { 
 					//Comprovem el número de matrícula
-					if (registreActiva.getCodiMatricula() != null && registreActiva.getCodiMatricula().equals(codi)){
+					if (registreActiva.getCodiMatricula() != null && registreActiva.getCodiMatricula().contains(codi)){
 						String codiTemp = dadesPersonals.getCodi();
 
 						if (codiTemp.trim().equals("activat") || codiTemp==null ){

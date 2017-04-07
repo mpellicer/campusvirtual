@@ -1,11 +1,12 @@
 package es.udl.asic.api.app.directori;
 
+import java.util.List;
 
 public class RegistreActiva{
 	
 	private String dni;
 	private String login;
-	private String codiMatricula;
+	private List <String> codiMatricula;
 	
 	public String getDni(){
 		return dni;
@@ -14,7 +15,7 @@ public class RegistreActiva{
 	public String getLogin(){
 		return login;
 	}
-	public String getCodiMatricula (){
+	public List <String> getCodiMatricula (){
 		return codiMatricula;
 	}
 	
@@ -26,7 +27,7 @@ public class RegistreActiva{
 		this.login = login;
 	}
 	
-	public void setCodiMatricula (String codiMatricula){
+	public void setCodiMatricula ( List <String> codiMatricula){
 		this.codiMatricula = codiMatricula;
 	}
 	

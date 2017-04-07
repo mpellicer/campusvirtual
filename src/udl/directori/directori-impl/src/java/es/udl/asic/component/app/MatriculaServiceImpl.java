@@ -31,7 +31,7 @@ public class MatriculaServiceImpl implements MatriculaService{
 	public RegistreActiva getRegistreActiva(String dni){
 		//Obtenim la connexio
 		Connection conn = getConnection();
-		String codi_matricula = null;
+		List <String> codi_matricula = null;
 		String login=null;
 		RegistreActiva rActiva = null;
 		
@@ -53,7 +53,12 @@ public class MatriculaServiceImpl implements MatriculaService{
 			// el primer ja ens serveix
 			if (rst.next()) {
 				login = rst.getString("LOGIN");
-				codi_matricula = rst.getString("EXP_NUMORD");
+				codi_matricula = new ArrayList <String>(); 
+				codi_matricula.add(rst.getString("EXP_NUMORD"));
+				
+				while (rst.next()){
+					codi_matricula.add(rst.getString("EXP_NUMORD"));
+				}
 			}
 			
 			if (dni!=null && codi_matricula != null && !"".equals(dni) && !"".equals(codi_matricula)){
