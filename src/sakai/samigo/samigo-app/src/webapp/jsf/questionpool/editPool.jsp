@@ -102,7 +102,7 @@ function textCounter(field, maxlimit) {
 <div class="form-group row"> 
     <h:outputLabel for="namefield" value="#{questionPoolMessages.p_name}" styleClass="col-sm-2  form-control-label"/>
     <div class="col-sm-6">
-    	<h:inputText readonly="#{questionpool.importToAuthoring == 'true' || questionpool.owner!=questionpool.currentPool.owner}" onchange="inIt()" id="namefield" size="30" maxlength="255" value="#{questionpool.currentPool.displayName}" />
+    	<h:inputText readonly="#{questionpool.importToAuthoring == 'true' || questionpool.owner!=questionpool.currentPool.owner}" onclick="inIt()" id="namefield" size="30" maxlength="255" value="#{questionpool.currentPool.displayName}" />
     </div>
 </div>
 <div class="form-group row"> 
