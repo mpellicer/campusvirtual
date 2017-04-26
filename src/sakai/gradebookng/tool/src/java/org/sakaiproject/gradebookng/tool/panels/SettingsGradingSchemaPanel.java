@@ -28,7 +28,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.sakaiproject.gradebookng.business.DoubleComparator;
 import org.sakaiproject.gradebookng.business.GradebookNgBusinessService;
+import org.sakaiproject.gradebookng.business.LetterGradeComparator;
 import org.sakaiproject.gradebookng.tool.model.GbGradingSchemaEntry;
 import org.sakaiproject.gradebookng.tool.model.GbSettings;
 import org.sakaiproject.service.gradebook.shared.GradeMappingDefinition;
@@ -190,8 +192,12 @@ public class SettingsGradingSchemaPanel extends Panel implements IFormModelUpdat
 
 		if (StringUtils.equals(gradingScaleName, "Pass / Not Pass")) {
 			rval = new TreeMap<>(Collections.reverseOrder()); // P before NP.
-		} else {
+		} else if (StringUtils.contains(gradingScaleName, "Letter Grades") || StringUtils.contains(gradingScaleName, "Grade Points")) {
 			rval = new TreeMap<>(new LetterGradeComparator()); // letter grade mappings
+		} else{
+			//Order by percent.
+			DoubleComparator doubleComparator = new DoubleComparator(percents);
+			rval = new TreeMap<String, Double>(doubleComparator);
 		}
 		rval.putAll(percents);
 
@@ -259,44 +265,5 @@ public class SettingsGradingSchemaPanel extends Panel implements IFormModelUpdat
 
 	public boolean isExpanded() {
 		return expanded;
-	}
-}
-
-/**
- * Comparator to ensure correct ordering of letter grades, catering for + and - in the grade Copied from GradebookService and made
- * Serializable as we use it in a TreeMap Also has the fix from SAK-30094.
- */
-class LetterGradeComparator implements Comparator<String>, Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public int compare(final String o1, final String o2) {
-		if (o1.toLowerCase().charAt(0) == o2.toLowerCase().charAt(0)) {
-			if (o1.length() == 2 && o2.length() == 2) {
-				if (o1.charAt(1) == '+') {
-					return -1; // SAK-30094
-				} else {
-					return 1;
-				}
-			}
-			if (o1.length() == 1 && o2.length() == 2) {
-				if (o2.charAt(1) == '+') {
-					return 1; // SAK-30094
-				} else {
-					return -1;
-				}
-			}
-			if (o1.length() == 2 && o2.length() == 1) {
-				if (o1.charAt(1) == '+') {
-					return -1; // SAK-30094
-				} else {
-					return 1;
-				}
-			}
-			return 0;
-		} else {
-			return o1.toLowerCase().compareTo(o2.toLowerCase());
-		}
 	}
 }
