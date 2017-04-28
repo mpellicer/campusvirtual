@@ -1,6 +1,7 @@
 package org.sakaiproject.gradebookng.tool.panels;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +20,7 @@ import org.sakaiproject.gradebookng.business.GradebookNgBusinessService;
 import org.sakaiproject.gradebookng.tool.component.GbAjaxButton;
 import org.sakaiproject.gradebookng.tool.component.GbFeedbackPanel;
 import org.sakaiproject.gradebookng.tool.pages.GradebookPage;
+import org.sakaiproject.gradebookng.tool.utils.DateUtil;
 import org.sakaiproject.service.gradebook.shared.Assignment;
 import org.sakaiproject.service.gradebook.shared.AssignmentHasIllegalPointsException;
 import org.sakaiproject.service.gradebook.shared.CategoryDefinition;
@@ -36,6 +38,9 @@ import org.sakaiproject.tool.gradebook.Gradebook;
 public class AddOrEditGradeItemPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
+	private static String HIDDEN_DUEDATE_ISO8601 = "duedate_iso8601";
+	
+	private Date dueDate;
 
 	@SpringBean(name = "org.sakaiproject.gradebookng.business.GradebookNgBusinessService")
 	protected GradebookNgBusinessService businessService;
@@ -94,6 +99,11 @@ public class AddOrEditGradeItemPanel extends Panel {
 			@Override
 			public void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final Assignment assignment = (Assignment) form.getModelObject();
+
+				setISODates();
+				if (dueDate != null) {
+					assignment.setDueDate(dueDate);
+				}
 
 				boolean validated = true;
 
@@ -218,6 +228,13 @@ public class AddOrEditGradeItemPanel extends Panel {
 			return new ResourceModel("button.savechanges");
 		} else {
 			return new ResourceModel("button.create");
+		}
+	}
+
+	private void setISODates(){
+		String dueDateString = getRequest().getRequestParameters().getParameterValue(HIDDEN_DUEDATE_ISO8601).toString("");
+		if(DateUtil.isValidISODate(dueDateString)){
+			dueDate = DateUtil.parseISODate(dueDateString);
 		}
 	}
 }
