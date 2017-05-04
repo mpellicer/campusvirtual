@@ -634,6 +634,18 @@
 											<token>TOKEN-STARTSCHEDULER</token>
 											<value>${sakai.scheduler.start}</value>
 										</replacement>
+										<replacement>
+											<token>TOKEN-URKUND-ADDRESS</token>
+											<value>${urkund.address}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-URKUND-USERNAME</token>
+											<value>${urkund.username}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-URKUND-PASSWORD</token>
+											<value>${urkund.password}</value>
+										</replacement>
 										
 									</replacements>
 								</configuration>
