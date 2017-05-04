@@ -16,6 +16,7 @@
 	<modules>
 		<module>bbb-tool</module>
 		<module>umusync</module>
+		<module>urkund-antiplagiarism/contentreview-impl</module>
 	</modules>    
     
 </project>
