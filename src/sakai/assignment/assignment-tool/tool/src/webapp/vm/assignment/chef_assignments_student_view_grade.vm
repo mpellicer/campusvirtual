@@ -164,7 +164,7 @@
 				#if($allowReviewService && $assignment.getContent().AllowReviewService && $assignment.getContent().AllowStudentViewReport && ($assignment.getContent().getTypeOfSubmission() != 4 || $submission.getContentReviewResults().size() > 0))
 					<tr>
 						<th>
-							$reviewServiceName&nbsp;$tlang.getString("review.report")
+							$tlang.getString("review.report")
 						</th>
 							<td>
 							#if (!$submission)
