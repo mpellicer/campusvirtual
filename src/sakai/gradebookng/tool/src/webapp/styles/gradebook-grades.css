@@ -490,7 +490,8 @@
   padding: 0 0.4em;
   width: 100%;
   white-space: nowrap; /* don't wrap so it stays on one line */
-  height: 40px;
+  height: 57px;
+  line-height: 54px;
 }
 #gradebookGradesToolbar ul {
   list-style: none;

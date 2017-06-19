@@ -99,6 +99,9 @@ public class GradeSummaryTablePanel extends Panel {
 		toggleActions.addOrReplace(new WebMarkupContainer("collapseCategoriesLink").setVisible(this.isGroupedByCategory));
 		addOrReplace(toggleActions);
 
+		addOrReplace(new WebMarkupContainer("weightColumnHeader").
+			setVisible(categoriesEnabled && isCategoryWeightEnabled && this.isGroupedByCategory));
+
 		addOrReplace(new WebMarkupContainer("categoryColumnHeader").
 			setVisible(categoriesEnabled && !this.isGroupedByCategory));
 
@@ -148,7 +151,7 @@ public class GradeSummaryTablePanel extends Panel {
 					}
 				}
 				categoryRow.add(new Label("categoryWeight", categoryWeight).
-					setVisible(isCategoryWeightEnabled && GradeSummaryTablePanel.this.isGroupedByCategory));categoryRow.add(new Label("categoryWeight", categoryWeight));
+					setVisible(isCategoryWeightEnabled && GradeSummaryTablePanel.this.isGroupedByCategory));
 
 				categoryItem.add(new ListView<Assignment>("assignmentsForCategory", categoryAssignments) {
 					private static final long serialVersionUID = 1L;
