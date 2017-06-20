@@ -99,7 +99,14 @@ h4{
 }
 
 .skip{
-	display: none;
+	position: absolute !important;
+	height: 0px; width: 0px;
+	overflow: hidden;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
+	margin: 0;
+	padding: 0;
 }
 
 input[type="submit"],input[type="button"]{

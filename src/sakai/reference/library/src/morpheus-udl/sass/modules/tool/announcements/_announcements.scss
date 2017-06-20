@@ -58,3 +58,11 @@
 	.llistagrups { list-style: none; }
 	.llistaassignatures>li:nth-child(odd) {background: #ECECEC}
 }
+
+.table-announcements {
+	th, td {
+		@media #{$phone} {
+			white-space: normal !important;
+		}
+	}
+}
