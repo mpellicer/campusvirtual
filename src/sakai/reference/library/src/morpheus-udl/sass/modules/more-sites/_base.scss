@@ -77,9 +77,11 @@ body.active-more-sites{
 	.tab-pane{
 		overflow-y: auto;
 		overflow-x: hidden;
+		background: $tool-background-color;
+		border: 1px solid $tool-border-color;
+		border-top: 0;
 	}
 	.tab-box{
-		border: 1px solid $tool-border-color;
 		padding: 5px 5px 5px 1em;
 		height: 100%;
 
