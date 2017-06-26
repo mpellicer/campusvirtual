@@ -32,7 +32,11 @@
   .icon-sakai--sakai-gradebookng {                          @extend .fa-book; }
   .icon-sakai--sakai-help {                                 @extend .fa-question-circle; }
   .icon-sakai--sakai-iframe {                               @extend .fa-globe; }
-  .icon-sakai--sakai-iframe-site {                          @extend .fa-list-ul; }
+  .icon-sakai--sakai-iframe-site, 
+  	.icon-sakai--sakai-synoptic-announcement,
+  	.icon-sakai--sakai-synoptic-messagecenter,
+  	.icon-sakai--sakai-summary-calendar,
+  	.icon-sakai--sakai-synoptic-chat{			            @extend .fa-list-ul; }
   .icon-sakai--sakai-lessonbuildertool {                    @extend .fa-leanpub; }
   .icon-sakai--sakai-mailbox {                              @extend .fa-envelope-o; }
   .icon-sakai--sakai-mailtool {                             @extend .fa-envelope-o; }

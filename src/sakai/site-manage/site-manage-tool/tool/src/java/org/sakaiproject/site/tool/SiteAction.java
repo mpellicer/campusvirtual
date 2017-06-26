@@ -864,6 +864,7 @@ public class SiteAction extends PagedResourceActionII {
 		// Second: if tool list is empty, get it from the template site settings
 		if (rv.isEmpty())
 		{
+			
 			// template site
 			Site templateSite = null;
 			String templateSiteId = "";
@@ -1003,7 +1004,6 @@ public class SiteAction extends PagedResourceActionII {
 				}
 			}
 		}
-		
 		return rv;
 	}
 	
@@ -11083,9 +11083,11 @@ private Map<String,List> getTools(SessionState state, String type, Site site) {
 			}
 		}
 		// now move the newly added synoptic tool to proper position
-		for (int i=0; i< (totalSynopticTools-position-1);i++)
-		{
-			tool.moveUp();
+		if (position >= 0) {
+			for (int i=0; i< (totalSynopticTools-position-1);i++)
+			{
+				tool.moveUp();
+			}
 		}
 	}
 
@@ -11210,6 +11212,14 @@ private Map<String,List> getTools(SessionState state, String type, Site site) {
 			
 			for (String homeToolId: homeToolIds)
 			{
+				String position=null;
+				
+				if (homeToolId.contains (":")) {
+					String [] composed = homeToolId.split (":");
+					homeToolId = composed [0];
+					position = composed [1];
+				}
+				
 				if (!SYNOPTIC_TOOL_ID_MAP.containsKey(homeToolId))
 				{
 					if (!pageHasToolId(toolList, homeToolId))
@@ -11221,7 +11231,13 @@ private Map<String,List> getTools(SessionState state, String type, Site site) {
 							ToolConfiguration tool = page.addTool();
 							tool.setTool(homeToolId, reg);
 							tool.setTitle(reg.getTitle() != null?reg.getTitle():"");
-							tool.setLayoutHints("0," + nonSynopticToolIndex++);
+							
+							if (position != null) {
+								tool.setLayoutHints(position);
+							} else {
+								tool.setLayoutHints("0," + nonSynopticToolIndex++);
+							}
+							
 						}
 					}
 				}
@@ -11267,7 +11283,12 @@ private Map<String,List> getTools(SessionState state, String type, Site site) {
 						{
 							// use value from map to find an internationalized tool title
 							String toolTitleText = rb.getString(SYNOPTIC_TOOL_TITLE_MAP.get(homeToolId));
-							addSynopticTool(page, homeToolId, toolTitleText, synopticToolIndex + ",1", synopticToolIndex++);
+							if (position == null) { 
+								addSynopticTool(page, homeToolId, toolTitleText, synopticToolIndex + ",1", synopticToolIndex++);
+							} else {
+								addSynopticTool(page, homeToolId, toolTitleText, position, -1);
+							}
+						
 						} catch (Exception e) {
 							M_log.error(this + ".saveFeatures addSynotpicTool: " + e.getMessage() + " site id = " + site.getId() + " tool = " + homeToolId, e);
 						}
