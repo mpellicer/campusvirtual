@@ -77,7 +77,7 @@ public class desconnexioCM implements Job {
 				  + " AND SGP.SITE_ID = sites_term.SITE_ID " 
 				  + " AND TO_CHAR(NAME) = 'sections_category'" 
 				   //Els valors de les sections categories es podrien agafar potser de la taula UDL_CM_SEC_CATEGORY
-				  + " AND TO_CHAR(VALUE) IN ('GRUP_MAT','GRUP_TIT','GRUP_TA','GRUP_ET')";
+				  + " AND (TO_CHAR(VALUE) IN ('GRUP_MAT','GRUP_TIT','GRUP_TA','GRUP_ET')  or TO_CHAR(VALUE) like 'GRUP_ET%')";
 
 	
 	private SectionManager instanciaSectionManager;
