@@ -76,7 +76,8 @@
 		<tool id = "sakai.guiadocent.ice" selected = "true" />
 		<tool id = "sakai.site.roster" selected = "true" />
 		<tool id = "sakai.assignment.grades" selected = "true" />
-		<tool id = "sakai.gradebook.tool" selected = "true" />
+		<tool id = "sakai.gradebook.tool" />
+		<tool id = "sakai.gradebookng" selected="true" />
 		<tool id = "sakai.resources" selected = "true" />
 		<tool id = "sakai.datacollector.biblioteca" selected = "true" />
 		<tool id = "sakai.messages" selected = "true" />
@@ -161,6 +162,7 @@
 		<tool id = "sakai.site.roster"/>
 		<tool id = "sakai.assignment.grades"/>
 		<tool id = "sakai.gradebook.tool"/>
+		<tool id = "sakai.gradebookng" />
 		<tool id = "sakai.resources"/>
 		<tool id = "sakai.messages"/>
 		<tool id = "sakai.siteinfo" required = "true" />
