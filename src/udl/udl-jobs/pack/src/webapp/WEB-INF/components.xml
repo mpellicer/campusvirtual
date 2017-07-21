@@ -105,6 +105,36 @@
 		
    </bean>
    
+   <bean id="correccioFavorits" class="cat.udl.asic.jobs.correccioFavorits" scope="singleton" init-method="init">
+		
+        <property name="securityService"
+        ref="org.sakaiproject.authz.api.SecurityService" />
+        <property name="sqlService"
+        ref="org.sakaiproject.db.api.SqlService" />
+        <property name="siteService"
+        ref="org.sakaiproject.site.api.SiteService" />
+		<property name="preferencesService"
+        ref="org.sakaiproject.user.api.PreferencesService" />      
+	</bean>
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.correccioFavorits"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		scope="singleton" init-method="init">
+		
+		<property name="beanId">
+			<value>correccioFavorits</value>
+		</property>
+      
+		<property name="jobName">
+			<value>Correcció de preferències dels usuaris en relació als espais favorits</value>
+		</property>
+		
+      	<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+   </bean>
+   
+   
    <bean id="deshabilitaGenerics" class="cat.udl.asic.jobs.deshabilitaGenerics" scope="singleton" init-method="init">
 		
         <property name="securityService"
