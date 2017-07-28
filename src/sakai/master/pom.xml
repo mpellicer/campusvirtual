@@ -1954,7 +1954,7 @@
         <artifactId>sakai</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <deployDirectory>${maven.tomcat.home}</deployDirectory>
+          <deployDirectory>${master.directory}/../../../build/docker/tomcat</deployDirectory>
           <warSourceDirectory>${basedir}/src/webapp</warSourceDirectory>
         </configuration>
       </plugin>
@@ -2024,15 +2024,30 @@
             <test.sakai.home>${test.sakai.home}</test.sakai.home>
           </systemPropertyVariables>
           <!-- This is to stop it stealing focus on developer machines (OSX) -->
-          <!-- file.encoding is for windows which was failing tests under maven without this -->
           <!-- The random source it to stop builds stalling on VMs with poor sources of random -->
-          <argLine>-Djava.awt.headless=true -Dfile.encoding=${project.build.sourceEncoding} ${random-source}</argLine>
+          <argLine>-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom</argLine>
         </configuration>
       </plugin>
       <plugin>
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <!-- This plugin locates the top of the build directory -->
+      <plugin>
+        <groupId>org.commonjava.maven.plugins</groupId>
+        <artifactId>directory-maven-plugin</artifactId>
+        <version>0.1</version>
+        <!-- Having this bind to a phase is confusing because it means that sometimes it deploys to the correct
+             directory and sometimes it doesn't. It's simpler to just require it to always be run. -->
+        <configuration>
+          <property>master.directory</property>
+          <project>
+            <!-- We have to use the master project as most things don't depend on the toplevel POM -->
+            <groupId>org.sakaiproject</groupId>
+            <artifactId>master</artifactId>
+          </project>
+        </configuration>
       </plugin>
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
