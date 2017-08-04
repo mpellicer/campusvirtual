@@ -7,7 +7,7 @@
 *.orig
 *.rej
 target
-build
+build/docker/sakai/sakai-bin
 sakai-demo.tar.gz
 sakai-demo.zip
 .directory
