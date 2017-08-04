@@ -1,0 +1,8 @@
+[template]
+src   = "bin/setenv.sh"
+dest  = "/home/sakai/server/tomcat/bin/setenv.sh"
+owner = "sakai"
+group = "sakai"
+mode  = "0740"
+keys = []
+

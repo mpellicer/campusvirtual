@@ -42,6 +42,6 @@
   <role rolename="probeuser"/>
   <role rolename="manager-gui" />
   
-  <user username="TOKEN_PROBE_PSI_USERNAME" password="TOKEN_PROBE_PSI_PASSWORD" roles="manager-gui"/>
+  <user username="{{getenv "TOMCAT_PSIPROBE_USERNAME"}}" password="{{getenv "TOMCAT_PSIPROBE_PASSWORD"}}" roles="manager-gui"/>
 
 </tomcat-users>

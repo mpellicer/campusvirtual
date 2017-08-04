@@ -1,0 +1,11 @@
+[template]
+src   = "conf/tomcat-users.xml"
+dest  = "/home/sakai/server/tomcat/conf/tomcat-user.xml"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = [
+  "/tomcat/psiprobe/username",
+  "/tomcat/psiprobe/password"
+]
+

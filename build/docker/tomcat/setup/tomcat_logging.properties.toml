@@ -1,0 +1,8 @@
+[template]
+src   = "conf/logging.properties"
+dest  = "/home/sakai/server/tomcat/conf/logging.properties"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = []
+

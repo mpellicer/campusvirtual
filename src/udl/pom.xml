@@ -6,6 +6,7 @@
         <artifactId>master</artifactId>
         <groupId>org.sakaiproject</groupId>
         <version>11.3</version>
+	<relativePath>../sakai/master/pom.xml</relativePath>
     </parent>
     
     <name>Udl Tools deployer</name>
@@ -22,6 +23,7 @@
 		<module>reports</module>
 		<module>cm</module>
 		<module>udl-jobs</module>
+		<module>deploy</module>
 	</modules>    
     
 </project>

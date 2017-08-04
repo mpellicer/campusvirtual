@@ -1,0 +1,7 @@
+[template]
+src   = "conf/toolOrder.xml"
+dest  = "/home/sakai/server/tomcat/sakai/toolOrder.xml"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = []

@@ -1,0 +1,7 @@
+[template]
+src   = "conf/jgroups-config.xml"
+dest  = "/home/sakai/server/tomcat/sakai/jgroups-config.xml"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = []

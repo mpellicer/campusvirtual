@@ -1954,7 +1954,7 @@
         <artifactId>sakai</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <deployDirectory>${master.directory}/../../../build/docker/tomcat</deployDirectory>
+          <deployDirectory>${master.directory}/../../../build/docker/sakai/sakai-bin</deployDirectory>
           <warSourceDirectory>${basedir}/src/webapp</warSourceDirectory>
         </configuration>
       </plugin>

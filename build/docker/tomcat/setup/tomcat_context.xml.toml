@@ -1,0 +1,8 @@
+[template]
+src   = "conf/context.xml"
+dest  = "/home/sakai/server/tomcat/conf/context.xml"
+owner = "sakai"
+group = "sakai"
+mode  = "0640"
+keys = []
+

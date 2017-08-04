@@ -1,0 +1,8 @@
+[template]
+src   = "conf/catalina.properties"
+dest  = "/home/sakai/server/tomcat/conf/catalina.properties"
+owner = "sakai"
+group = "sakai"
+mode  = "0640"
+keys = []
+

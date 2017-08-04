@@ -1,0 +1,7 @@
+[template]
+src   = "conf/log4j.properties"
+dest  = "/home/sakai/server/tomcat/conf/log4j.properties"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = []
