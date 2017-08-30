@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>udl-kernel-base</artifactId>
+		<groupId>cat.udl.asic.kernel</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<name>API UdL Kernel</name>
+	<groupId>cat.udl.asic.kernel</groupId>
+	<artifactId>udl-kernel-api</artifactId>
+
+	<organization>
+		<name>Universitat de Lleida</name>
+		<url>http://www.udl.cat/</url>
+	</organization>
+
+	<inceptionYear>2017</inceptionYear>
+
+	<packaging>jar</packaging>
+
+	<properties>
+		<deploy.target>shared</deploy.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${kernel.hibernate.version}</version>
+		</dependency>
+			<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>cat.udl.asic.kernel.api.SecurityProperties</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

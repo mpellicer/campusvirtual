@@ -1,0 +1,7 @@
+[template]
+src   = "conf/sec.properties"
+dest  = "/home/sakai/server/tomcat/sakai/sec.properties"
+owner = "sakai"
+group = "sakai"
+mode  = "0644"
+keys = []

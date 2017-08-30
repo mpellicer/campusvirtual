@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+##set -e
 
 su -s /bin/sh -c 'confd -onetime -backend env' sakai
 
