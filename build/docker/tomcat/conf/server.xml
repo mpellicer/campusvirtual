@@ -100,9 +100,9 @@
     		   redirectPort="8443" 
     		   URIEncoding="UTF-8" 
     	 	   connectionTimeout="120000"
-               maxThreads="250"
-               minSpareThreads="25"
-               maxSpareThreads="75"
+                   maxThreads="250"
+                   minSpareThreads="25"
+                   maxSpareThreads="75"
     />
 
 
@@ -115,7 +115,7 @@
     <!-- You should set jvmRoute to support load-balancing via AJP ie :
     <Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1">
     -->
-    <Engine name="Catalina" defaultHost="localhost" jvmRoute="{{getenv "TOMCAT_JVM_ROUTE"}}">
+    <Engine name="Catalina" defaultHost="localhost" jvmRoute="{{getenv "HOSTNAME"}}" >
 
       <!--For clustering, please take a look at documentation at:
           /docs/cluster-howto.html  (simple how to)
