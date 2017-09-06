@@ -7,7 +7,7 @@ MAINTAINER Alexandre Ballesté <alexandre.balleste@udl.cat>
 # Install apache2
 RUN \
   apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 vim
+  DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 vim cron
   #rm -rf /var/lib/apt/lists/* 
 
 # Copy in the apache config
@@ -24,8 +24,12 @@ RUN \
   mkdir -p /opt/files && \
   mkdir -p /opt/scripts
 
-COPY entrypoint.sh /opt/scripts/entrypoint.sh
-RUN chmod 755 /opt/scripts/entrypoint.sh
+COPY *.sh /opt/scripts/
+RUN chmod 755 /opt/scripts/*.sh
+
+#Create a log file for cron job
+COPY checkcrontask /opt/scripts
+RUN touch /var/log/cron.log
 
 # Expose the HTTP common ports
 EXPOSE 443

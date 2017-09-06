@@ -8,12 +8,15 @@ services:
      - 8080
      - 8009
      - 8025
+    volumes:
+     - ./hosts.txt:/opt/hosts
   web:
     image: asicudl/frontalweb:latest
     volumes:
      - ./ssl-private.key:/opt/files/ssl-private
      - ./ssl-public.crt:/opt/files/ssl-public
      - ./ssl-chain.crt:/opt/files/ssl-chain
+     - ./hosts.txt:/opt/hosts
     ports:
      - "80:80"
      - "443:443"
