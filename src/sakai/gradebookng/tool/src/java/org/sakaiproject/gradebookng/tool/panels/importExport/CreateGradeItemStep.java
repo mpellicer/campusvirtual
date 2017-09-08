@@ -71,8 +71,8 @@ public class CreateGradeItemStep extends Panel {
                 log.debug("Assignment: " + assignment);
 
                 // sync up the assignment data so we can present it for confirmation
-                processedGradeItem.setAssignmentTitle(a.getName());
-                processedGradeItem.setAssignmentPoints(a.getPoints());
+                processedGradeItem.setItemTitle(a.getName());
+                processedGradeItem.setItemPointValue(String.valueOf(a.getPoints()));
 
                 //Figure out if there are more steps
                 //If so, go to the next step (ie do it all over again)

@@ -1,6 +1,10 @@
 package org.sakaiproject.gradebookng.tool.panels;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,6 +34,8 @@ import org.sakaiproject.tool.gradebook.Gradebook;
 /**
  * Panel for the course grade override window
  *
+ * Note that validation is disabled when final grade mode is activated.
+ *
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  */
 public class CourseGradeOverridePanel extends Panel {
@@ -57,6 +63,7 @@ public class CourseGradeOverridePanel extends Panel {
 		// TODO this could all be passed in through the model if it was changed to a map, as per CourseGradeItemCellPanel...
 		final GbUser studentUser = this.businessService.getUser(studentUuid);
 		final String currentUserUuid = this.businessService.getCurrentUser().getId();
+		final Locale currentUserLocale = this.businessService.getUserPreferredLocale();
 		final GbRole currentUserRole = this.businessService.getUserRole();
 		final Gradebook gradebook = this.businessService.getGradebook();
 		final boolean courseGradeVisible = this.businessService.isCourseGradeVisible(currentUserUuid);
@@ -95,13 +102,14 @@ public class CourseGradeOverridePanel extends Panel {
 
 			@Override
 			public void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				final String newGrade = (String) form.getModelObject();
+				String newGrade = (String) form.getModelObject();
 
 				// validate the grade entered is a valid one for the selected grading schema
 				// though we allow blank grades so the override is removed
-				if (StringUtils.isNotBlank(newGrade)) {
-					final GradebookInformation gbInfo = CourseGradeOverridePanel.this.businessService.getGradebookSettings();
+				// Note: validation is not enforced for final grade mode
+				final GradebookInformation gbInfo = CourseGradeOverridePanel.this.businessService.getGradebookSettings();
 
+				if (StringUtils.isNotBlank(newGrade)) {
 					final Map<String, Double> schema = gbInfo.getSelectedGradingScaleBottomPercents();
 					if (!schema.containsKey(newGrade)) {
 						error(new ResourceModel("message.addcoursegradeoverride.invalid").getObject());
@@ -177,14 +185,14 @@ public class CourseGradeOverridePanel extends Panel {
 	private String formatPoints(final CourseGrade courseGrade, final Gradebook gradebook) {
 
 		String rval;
-		
+
 		// only display points if not weighted category type
 		final GbCategoryType categoryType = GbCategoryType.valueOf(gradebook.getCategory_type());
 		if (categoryType != GbCategoryType.WEIGHTED_CATEGORY) {
 
 			final Double pointsEarned = courseGrade.getPointsEarned();
 			final Double totalPointsPossible = courseGrade.getTotalPointsPossible();
-			
+
 			if(pointsEarned != null && totalPointsPossible != null) {
 				rval = new StringResourceModel("coursegrade.display.points-first", null,
 						new Object[] { pointsEarned, totalPointsPossible }).getString();
@@ -194,9 +202,50 @@ public class CourseGradeOverridePanel extends Panel {
 		} else {
 			rval = getString("coursegrade.display.points-none");
 		}
-		
+
 		return rval;
 
+	}
+	
+	/**
+	 * Helper to accept numerical grades and get the scale value. 
+	 * Returns the scale whose value equals to the numeric value received, or if it doesn't exists, the highest value lower.
+	 *
+	 * @param newGrade the grade to convert
+	 * @param schema the current schema of Gradebook
+	 * @param currentUserLocale the locale to format the grade with the right decimal separator
+	 * @return fully formatted string ready for display
+	 */
+	private String getGradeFromNumber(String newGrade, Map<String, Double> schema, Locale currentUserLocale) {
+		Double currentGradeValue = new Double(0.0);
+		Double maxValue = new Double(0.0);
+		try	{
+			NumberFormat nf = NumberFormat.getInstance(currentUserLocale);
+			ParsePosition parsePosition = new ParsePosition(0);
+			Number n = nf.parse(newGrade,parsePosition);
+			if (parsePosition.getIndex() != newGrade.length()) 
+				throw new NumberFormatException("Grade has a bad format.");
+			Double dValue = n.doubleValue();
+			
+			for (Entry<String, Double> entry : schema.entrySet()) {
+				Double tempValue = entry.getValue();
+				if (dValue.equals(tempValue)) {
+					return entry.getKey();
+				}
+				else {
+					if (maxValue.compareTo(tempValue) < 0) maxValue=tempValue;
+					if ((dValue.compareTo(tempValue) > 0 ) && (tempValue.compareTo(currentGradeValue) >= 0 )) {
+						currentGradeValue = tempValue;
+						newGrade=entry.getKey();
+					}
+				}
+				if (dValue.compareTo(maxValue) > 0) throw new NumberFormatException("Grade exceeds the maximum number allowed in current scale.");
+			}
+			return newGrade;
+		}
+		catch (NumberFormatException e) {
+			throw new NumberFormatException("Grade is not a number, neither a scale value.");
+		}
 	}
 
 }

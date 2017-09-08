@@ -228,11 +228,6 @@ public class ExportPanel extends Panel {
 					CUSTOM_EXPORT_COLUMN_PREFIX,
 					getString("importExport.export.csv.headers.courseGrade")));
 			}
-			if (isCustomExport && this.includeGradeOverride) {
-				header.add(String.format("%s%s",
-					CUSTOM_EXPORT_COLUMN_PREFIX,
-					getString("importExport.export.csv.headers.gradeOverride")));
-			}
 			if (isCustomExport && this.includeLastLogDate) {
 				header.add(String.format("%s%s",
 					CUSTOM_EXPORT_COLUMN_PREFIX,

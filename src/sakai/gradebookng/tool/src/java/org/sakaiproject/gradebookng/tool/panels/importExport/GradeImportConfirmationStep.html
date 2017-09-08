@@ -7,12 +7,13 @@
         <table class="table table-striped table-condensed grade_import_confirmation">
             <thead>
               <tr>
-                <th><wicket:message key="importExport.confirmation.update.heading" /></th>
+                <th><div class="messageInformation"><strong><wicket:message key="importExport.confirmation.update.heading" /></strong></div></th>
               </tr>
             </thead>
             <tbody>
                 <tr wicket:id="grades_update">
-                    <td><span wicket:id="itemTitle">[assignment 1]</span></td>
+                    <td><span wicket:id="title">[assignment 1]</span></td>
+                    <td><span wicket:id="points">[50]</span></td>
                 </tr>
             </tbody>
         </table>
@@ -22,12 +23,13 @@
         <table class="table table-striped table-condensed grade_import_confirmation">
             <thead>
                 <tr>
-                    <th><wicket:message key="importExport.confirmation.create.heading" /></th>
+                    <th><div class="messageInformation"><strong><wicket:message key="importExport.confirmation.create.heading" /></strong></div></th>
                 </tr>
             </thead>
             <tbody>
                 <tr wicket:id="grades_create">
-                    <td><span wicket:id="itemTitle">[assignment 1]</span></td>
+                    <td><span wicket:id="title">[assignment 1]</span></td>
+                    <td><span wicket:id="points">[50]</span></td>
                 </tr>
             </tbody>
         </table>
@@ -35,7 +37,7 @@
     
     <!--  TODO collapse these three containers -->
     <div wicket:id="grades_modify_container">
-   		<h3><wicket:message key="importExport.confirmation.modify.heading" /></h3>
+        <div class="messageInformation"><strong><wicket:message key="importExport.confirmation.modify.heading" /></strong></div>
         <table class="table table-striped table-condensed grade_import_confirmation">
             <thead>
               <tr>
@@ -45,8 +47,8 @@
             </thead>
             <tbody>
                 <tr wicket:id="grades_modify">
-                    <td><span wicket:id="itemTitle">[assignment 1]</span></td>
-                    <td><span wicket:id="itemPointValue">[50]</span></td>
+                    <td><span wicket:id="title">[assignment 1]</span></td>
+                    <td><span wicket:id="points">[50]</span></td>
                 </tr>
             </tbody>
         </table>

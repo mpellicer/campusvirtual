@@ -1,9 +1,6 @@
 package org.sakaiproject.gradebookng.business;
 
-import java.math.RoundingMode;
 import java.text.Collator;
-import java.text.Format;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +26,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.sakaiproject.authz.api.Member;
 import org.sakaiproject.authz.api.SecurityService;
+import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -58,6 +56,7 @@ import org.sakaiproject.service.gradebook.shared.GradebookNotFoundException;
 import org.sakaiproject.service.gradebook.shared.GradebookPermissionService;
 import org.sakaiproject.service.gradebook.shared.GradebookService;
 import org.sakaiproject.service.gradebook.shared.GraderPermission;
+import org.sakaiproject.service.gradebook.shared.GradingType;
 import org.sakaiproject.service.gradebook.shared.InvalidGradeException;
 import org.sakaiproject.service.gradebook.shared.PermissionDefinition;
 import org.sakaiproject.service.gradebook.shared.SortType;
@@ -118,9 +117,12 @@ public class GradebookNgBusinessService {
 	@Setter
 	private SecurityService securityService;
 
+	@Setter
+	private ServerConfigurationService serverConfigurationService;
+
 	public static final String ASSIGNMENT_ORDER_PROP = "gbng_assignment_order";
 
-	private Collator collator = Collator.getInstance();
+	private final Collator collator = Collator.getInstance();
 
 	/**
 	 * Get a list of all users in the current site that can have grades
@@ -244,13 +246,21 @@ public class GradebookNgBusinessService {
 	 * @return the gradebook for the site
 	 */
 	private Gradebook getGradebook(final String siteId) {
+		Gradebook gradebook = null;
 		try {
-			final Gradebook gradebook = (Gradebook) this.gradebookService.getGradebook(siteId);
-			return gradebook;
+			gradebook = (Gradebook) this.gradebookService.getGradebook(siteId);
 		} catch (final GradebookNotFoundException e) {
-			log.error("No gradebook in site: " + siteId);
-			return null;
+			log.debug("Request made for inaccessible, adding gradebookUid=" + siteId);
+			this.gradebookFrameworkService.addGradebook(siteId,siteId);
+			try {
+				gradebook = (Gradebook) this.gradebookService.getGradebook(siteId);
+			} catch (GradebookNotFoundException e2) {
+				log.error("Request made and could not add inaccessible gradebookUid=" + siteId);
+			}
 		}
+
+		log.error("No gradebook in site: " + siteId);
+		return gradebook;
 	}
 
 	/**
@@ -484,7 +494,7 @@ public class GradebookNgBusinessService {
 		final Double maxPoints = assignment.getPoints();
 
 		// check what grading mode we are in
-		final GbGradingType gradingType = GbGradingType.valueOf(gradebook.getGrade_type());
+		final GradingType gradingType = GradingType.valueOf(gradebook.getGrade_type());
 
 		// if percentage entry type, reformat the grades, otherwise use points as is
 		String newGradeAdjusted = newGrade;
@@ -492,11 +502,15 @@ public class GradebookNgBusinessService {
 		String storedGradeAdjusted = storedGrade;
 		if(StringUtils.isNotBlank(storedGradeAdjusted)){
 			//Fix a problem when the grades comes from the old Gradebook API with locale separator, always compare the values using the same separator
-			oldGradeAdjusted = oldGradeAdjusted.replace(newGradeAdjusted.contains(",") ? "." : ",", newGradeAdjusted.contains(",") ? "," : ".");
-			storedGradeAdjusted = storedGradeAdjusted.replace(newGradeAdjusted.contains(",") ? "." : ",", newGradeAdjusted.contains(",") ? "," : ".");
+			if (StringUtils.isNotBlank(oldGradeAdjusted)) {
+				oldGradeAdjusted = oldGradeAdjusted.replace(newGradeAdjusted.contains(",") ? "." : ",", newGradeAdjusted.contains(",") ? "," : ".");
+			}
+			if (StringUtils.isNotBlank(storedGradeAdjusted)) {
+				storedGradeAdjusted = storedGradeAdjusted.replace(newGradeAdjusted.contains(",") ? "." : ",", newGradeAdjusted.contains(",") ? "," : ".");
+			}
 		}
 
-		if (gradingType == GbGradingType.PERCENTAGE) {
+		if (gradingType == GradingType.PERCENTAGE) {
 			// the passed in grades represents a percentage so the number needs to be adjusted back to points
 			final Double newGradePercentage = NumberUtils.toDouble(newGrade);
 			final Double newGradePointsFromPercentage = (newGradePercentage / 100) * maxPoints;
@@ -1230,9 +1244,9 @@ public class GradebookNgBusinessService {
 	class LastNameComparator implements Comparator<User> {
 		@Override
 		public int compare(final User u1, final User u2) {
-			collator.setStrength(Collator.PRIMARY);
-			return new CompareToBuilder().append(u1.getLastName(), u2.getLastName(), collator)
-					.append(u1.getFirstName(), u2.getFirstName(), collator).toComparison();
+			GradebookNgBusinessService.this.collator.setStrength(Collator.PRIMARY);
+			return new CompareToBuilder().append(u1.getLastName(), u2.getLastName(), GradebookNgBusinessService.this.collator)
+					.append(u1.getFirstName(), u2.getFirstName(), GradebookNgBusinessService.this.collator).toComparison();
 		}
 	}
 
@@ -1243,9 +1257,9 @@ public class GradebookNgBusinessService {
 	class FirstNameComparator implements Comparator<User> {
 		@Override
 		public int compare(final User u1, final User u2) {
-			collator.setStrength(Collator.PRIMARY);
-			return new CompareToBuilder().append(u1.getFirstName(), u2.getFirstName(), collator)
-					.append(u1.getLastName(), u2.getLastName(), collator).toComparison();
+			GradebookNgBusinessService.this.collator.setStrength(Collator.PRIMARY);
+			return new CompareToBuilder().append(u1.getFirstName(), u2.getFirstName(), GradebookNgBusinessService.this.collator)
+					.append(u1.getLastName(), u2.getLastName(), GradebookNgBusinessService.this.collator).toComparison();
 		}
 	}
 
