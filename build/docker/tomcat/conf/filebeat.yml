@@ -1,0 +1,23 @@
+filebeat.prospectors:
+
+# Each - is a prospector. Most options can be set at the prospector level, so
+# you can use different prospectors for various configurations.
+# Below are the prospector specific configurations.
+
+- input_type: log
+  document_type: tomcat
+  paths:
+    - /home/sakai/server/logs/catalina.out
+  multiline.pattern: '^([0-9]{4}-[0-9]{2}-[0-9]{2})|([J|F|M|A|M|S|O|N|D][a-z]{2}}
+}
+ [0-9]{1,2}, [0-9]{2})'
+  multiline.negate: true
+  multiline.match: after
+
+output.logstash:
+  # The Logstash hosts
+  hosts: ["elk:5044"]
+  ssl:
+    certificate_authorities:
+      - /etc/pki/tls/certs/logstash-beats.crt
+

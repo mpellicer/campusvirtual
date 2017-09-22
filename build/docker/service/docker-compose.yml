@@ -2,28 +2,48 @@ version: "2"
 services:
   app:
     image: asicudl/campusvirtual:latest
-    env_file:
-     - ${SAKAI_ENV_FILEPATH}
+#   image: asicudl/tomcat-sakai-11:dev
     ports:
      - 8080
      - 8009
      - 8025
+    env_file:
+     - ${SAKAI_ENV_FILEPATH}
     volumes:
      - ./hosts.txt:/opt/hosts
+     - ./certs/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
+    links:
+     - elk
   web:
     image: asicudl/frontalweb:latest
     volumes:
-     - ./ssl-private.key:/opt/files/ssl-private
-     - ./ssl-public.crt:/opt/files/ssl-public
-     - ./ssl-chain.crt:/opt/files/ssl-chain
+     - ./private/ssl-private.key:/opt/files/ssl-private
+     - ./certs/ssl-public.crt:/opt/files/ssl-public
+     - ./certs/ssl-chain.crt:/opt/files/ssl-chain
      - ./hosts.txt:/opt/hosts
+     - ./certs/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
+    env_file:
+     - ${SAKAI_ENV_FILEPATH}
     ports:
      - "80:80"
      - "443:443"
+     - "8443:8443"
     links:
      - app
-networks:
-  default:
-   external:
-    name: br0
+  elk:
+    image: asicudl/elk:latest
+    volumes: 
+     - ./private/logstash-beats.key:/etc/pki/tls/private/logstash-beats.key
+     - ./certs/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
+     - ./elk-data:/var/lib/elasticsearch
+    expose:
+      - "5601"
+      - "9200"
+      - "5044"
+
+#networks:
+#  default:
+#   external:
+#    name: br0
+
 

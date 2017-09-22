@@ -60,6 +60,7 @@ if [ -f "/opt/files/ssl-private" -a -f "/opt/files/ssl-public" ]; then
   else
     # If we don't have a chain file remove the config for it.
     sed -i '/SSLCertificateChainFile/d' /etc/apache2/sites-available/sakai.conf
+    sed -i '/SSLCertificateChainFile/d' /etc/apache2/sites-available/kibana.conf
   fi
   a2enmod -q ssl
   if [ -z "$SERVERNAME" ]; then
@@ -69,7 +70,17 @@ if [ -f "/opt/files/ssl-private" -a -f "/opt/files/ssl-public" ]; then
   fi
   sed -i "/ServerName/c\\
 ServerName $servername" /etc/apache2/sites-available/sakai.conf
+sed -i "/ServerName/c\\
+ServerName $servername" /etc/apache2/sites-available/kibana.conf
+
+#Add a username a username and password to authenticate kibana console
+
+htpasswd -bc /etc/apache2/.htpasswd $KIBANA_USERNAME $KIBANA_PASSWORD
+
 fi
+
+#Starting the filebeat service
+service filebeat start
 
 # apache2ctl would set these but we're calling apache directly to get better docker signals.
 source /etc/apache2/envvars

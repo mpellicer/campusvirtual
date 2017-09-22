@@ -1,0 +1,18 @@
+filebeat.prospectors:
+
+# Each - is a prospector. Most options can be set at the prospector level, so
+# you can use different prospectors for various configurations.
+# Below are the prospector specific configurations.
+
+- input_type: log
+  document_type: apache
+  paths:
+    - /var/log/apache2/*.log
+
+output.logstash:
+  # The Logstash hosts
+  hosts: ["elk:5044"]
+  ssl:
+    certificate_authorities:
+      - /etc/pki/tls/certs/logstash-beats.crt
+
