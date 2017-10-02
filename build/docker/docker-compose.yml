@@ -1,0 +1,35 @@
+version: "2"
+services:
+  app:
+    extends:
+      file: common.yml
+      service: app
+    environment:
+     - waitfordb=true
+    links:
+     - elk
+    depends_on:
+     - db
+    volumes:
+     - ./sakai/sakai-bin/components:/home/sakai/server/tomcat/components
+     - ./sakai/sakai-bin/webapps:/home/sakai/server/tomcat/webapps
+     - ./sakai/sakai-bin/lib:/home/sakai/server/tomcat/sakai-lib
+  web:
+    extends:
+       file: common.yml
+       service: web
+    links:
+      - app
+  elk:
+     extends:
+       file: common.yml
+       service: elk
+  db:
+    image: asicudl/oracle-development
+    ports:
+     - "1521:1521"
+
+networks:
+  default:
+   external:
+    name: br0

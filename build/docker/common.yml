@@ -2,7 +2,6 @@ version: "2"
 services:
   app:
     image: asicudl/campusvirtual:latest
-#   image: asicudl/tomcat-sakai-11:dev
     ports:
      - 8080
      - 8009
@@ -12,8 +11,8 @@ services:
     volumes:
      - ./hosts.txt:/opt/hosts
      - ./certs/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
-    links:
-     - elk
+#    links:
+#     - elk
   web:
     image: asicudl/frontalweb:latest
     volumes:
@@ -28,8 +27,8 @@ services:
      - "80:80"
      - "443:443"
      - "8443:8443"
-    links:
-     - app
+#    links:
+#     - app
   elk:
     image: asicudl/elk:latest
     volumes: 
@@ -41,9 +40,7 @@ services:
       - "9200"
       - "5044"
 
-#networks:
-#  default:
-#   external:
-#    name: br0
-
-
+networks:
+  default:
+   external:
+    name: br0

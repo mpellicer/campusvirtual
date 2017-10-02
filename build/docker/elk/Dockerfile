@@ -1,4 +1,5 @@
 FROM sebp/elk
 
-COPY 40-tomcat.conf /etc/logstash/conf.d/40-tomcat.conf
+MAINTAINER Alexandre Ballesté <alexandre.balleste@udl.cat>
+
 COPY tomcat-pattern /opt/logstash/tomcat-pattern
