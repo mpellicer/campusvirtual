@@ -16,10 +16,19 @@ $PBJQ(document).ready(function(){
 		var serverLocalOffset = serverDateAndGMTOffset.getTime() - (new Date()).getTime();
 
 		return function() {
+			var dateString = "";
 			var offsetDate = new Date((new Date()).getTime() + serverLocalOffset);
-			var dateString = offsetDate.toUTCString()
-					.replace(/GMT/, serverTzDisplay)
-					.replace(/UTC/, serverTzDisplay);
+
+			if (portal.locale) {
+				var newDate = new Date(offsetDate.toUTCString()
+						.replace(/GMT/, "")
+						.replace(/UTC/, ""));
+				dateString = newDate.toLocaleString(portal.locale);
+			} else {
+				var dateString = offsetDate.toUTCString()
+						.replace(/GMT/, serverTzDisplay)
+						.replace(/UTC/, serverTzDisplay);
+			}
 
 			$PBJQ('#serverTime').text(dateString);
 	
