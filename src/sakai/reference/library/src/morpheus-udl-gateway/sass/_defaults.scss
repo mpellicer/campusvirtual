@@ -104,6 +104,10 @@ $logo: 'images/logo-udl.png' !default;
 $skin-with-icons: false !default;
 $icon-size: 20px !default;
 
+/* Footer */
+$footer-background: #f9f9f9 !default;
+$footer-color: $background-color-secondary !default;
+
 @import "customization"; //it is created on-the-fly by maven.
 
 // @import url(#{$font-family-url});
