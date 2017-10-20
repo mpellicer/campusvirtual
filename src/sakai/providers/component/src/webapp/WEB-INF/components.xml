@@ -176,7 +176,9 @@
 					<entry key="udl.aluDOCTORAT"><ref bean="cat.udl.asic.provider.EspaiAlumnesDOCTORAT"/></entry>
 					<entry key="udl.aluMOBILITAT"><ref bean="cat.udl.asic.provider.EspaiAlumnesMOBILITAT"/></entry>
 					<entry key="udl.aluEXTERNS"><ref bean="cat.udl.asic.provider.EspaiAlumnesEXTERNS"/></entry>
-					
+					<entry key="udl.aluCFC"><ref bean="cat.udl.asic.provider.EspaiAlumnesCFC"/></entry>
+					<entry key="udl.aluIL"><ref bean="cat.udl.asic.provider.EspaiAlumnesIL"/></entry>
+					<entry key="udl.aluUESTIU"><ref bean="cat.udl.asic.provider.EspaiAlumnesUESTIU"/></entry>
 					<entry key="udl.aluUdL"><ref bean="cat.udl.asic.provider.EspaiAlumnes"/></entry>
 					<entry key="udl.intranet"><ref bean="cat.udl.asic.provider.EspaiIntranet"/></entry>
                		<entry key="udl.paspdi"><ref bean="cat.udl.asic.provider.EspaiPASPDI"/></entry>
@@ -223,9 +225,19 @@
 					<entry key="aluMOBILITAT">
 						<value>access</value>
 					</entry>
+					<entry key="aluCFC">
+						<value>access</value>
+					</entry>
+					<entry key="aluIL">
+						<value>access</value>
+					</entry>
+					<entry key="aluUESTIU">
+						<value>access</value>
+					</entry>
 					<entry key="aluEXTERNS">
 						<value>access</value>
 					</entry>
+
 				</map>
 			</property>		
 	</bean>
@@ -408,6 +420,53 @@
 			</property>		
 	</bean>
 		
+	<bean 
+			id="cat.udl.asic.provider.EspaiAlumnesCFC"
+			class="cat.udl.asic.provider.UserTypeProvider"
+			init-method="init"
+			destroy-method="destroy"
+			>
+			
+			<property name="rolemap">
+				<map>
+					<entry key="aluCFC">
+						<value>access</value>
+					</entry>
+				</map>
+			</property>		
+	</bean>
+
+	<bean 
+			id="cat.udl.asic.provider.EspaiAlumnesIL"
+			class="cat.udl.asic.provider.UserTypeProvider"
+			init-method="init"
+			destroy-method="destroy"
+			>
+			
+			<property name="rolemap">
+				<map>
+					<entry key="aluIL">
+						<value>access</value>
+					</entry>
+				</map>
+			</property>		
+	</bean>
+	
+	<bean 
+			id="cat.udl.asic.provider.EspaiAlumnesUESTIU"
+			class="cat.udl.asic.provider.UserTypeProvider"
+			init-method="init"
+			destroy-method="destroy"
+			>
+			
+			<property name="rolemap">
+				<map>
+					<entry key="aluUESTIU">
+						<value>access</value>
+					</entry>
+				</map>
+			</property>		
+	</bean>		
 	
 	<bean 
 			id="cat.udl.asic.provider.EspaiIntranet"
@@ -449,6 +508,15 @@
 						<value>access</value>
 					</entry>
 					<entry key="aluEXTERNS">
+						<value>access</value>
+					</entry>
+					<entry key="aluCFC">
+						<value>access</value>
+					</entry>
+					<entry key="aluIL">
+						<value>access</value>
+					</entry>
+					<entry key="aluUESTIU">
 						<value>access</value>
 					</entry>
 				</map>
