@@ -38,7 +38,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author <a href="mailto:jholtzman@berkeley.edu">Josh Holtzman</a>
  */
 public class Gradebook implements Serializable {
-    private Long id;
+    
+	private static final long serialVersionUID = 1L;
+	
+	private Long id;
     private String uid;
     private int version;
     private String name;
@@ -62,7 +65,6 @@ public class Gradebook implements Serializable {
     private Boolean showRank;
     private Boolean showItemStatistics;
     private Boolean showStatisticsChart;
-    private boolean finalGradeMode;
 
     /**
      * Default no-arg constructor needed for persistence

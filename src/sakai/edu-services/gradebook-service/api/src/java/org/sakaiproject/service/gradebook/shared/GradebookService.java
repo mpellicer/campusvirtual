@@ -44,6 +44,7 @@ import java.util.Map;
  * service interfaces which own them.
  */
 public interface GradebookService {
+	// Application service hooks.
 	
 	// These have been deprecated in favour of the {@link GradingType} enum
 	@Deprecated public static final int GRADE_TYPE_POINTS = 1;
@@ -92,7 +93,7 @@ public interface GradebookService {
          */
         INVALID_DECIMAL
     }
-    
+
     /**
      * Array of chars that are not allowed in a gb item title
      */

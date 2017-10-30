@@ -20,7 +20,6 @@ import org.sakaiproject.gradebookng.business.exception.GbImportCommentMissingIte
 import org.sakaiproject.gradebookng.business.exception.GbImportExportDuplicateColumnException;
 import org.sakaiproject.gradebookng.business.exception.GbImportExportInvalidColumnException;
 import org.sakaiproject.gradebookng.business.exception.GbImportExportInvalidFileTypeException;
-import org.sakaiproject.gradebookng.business.exception.GbImportExportUnknownStudentException;
 import org.sakaiproject.gradebookng.business.model.GbStudentGradeInfo;
 import org.sakaiproject.gradebookng.business.model.ImportedSpreadsheetWrapper;
 import org.sakaiproject.gradebookng.business.model.ProcessedGradeItem;
@@ -44,7 +43,7 @@ public class GradeImportUploadStep extends Panel {
 	private final String panelId;
 
 	@SpringBean(name = "org.sakaiproject.gradebookng.business.GradebookNgBusinessService")
-	protected GradebookNgBusinessService businessService;
+	private GradebookNgBusinessService businessService;
 
 	public GradeImportUploadStep(final String id) {
 		super(id);
@@ -104,23 +103,20 @@ public class GradeImportUploadStep extends Panel {
 				try {
 					spreadsheetWrapper = ImportGradesHelper.parseImportedGradeFile(upload.getInputStream(), upload.getContentType(), upload.getClientFileName(), userMap);
 				} catch (final GbImportExportInvalidColumnException e) {
-					log.debug("incorrect format", e);
-					error(getString("importExport.error.incorrectformat")+" - "+e.getMessage());
+					log.debug("GBNG import error", e);
+					error(getString("importExport.error.incorrectformat"));
 					return;
 				} catch (final GbImportExportInvalidFileTypeException | InvalidFormatException e) {
-					log.debug("incorrect type", e);
-					error(getString("importExport.error.incorrecttype")+" - "+e.getMessage());
-					return;
-				} catch (final GbImportExportUnknownStudentException e) {
-					error(getString("importExport.error.unknownstudent"));
+					log.debug("GBNG import error", e);
+					error(getString("importExport.error.incorrecttype"));
 					return;
 				} catch (final GbImportExportDuplicateColumnException e) {
-					log.debug("duplicate column", e);
-					error(getString("importExport.error.duplicatecolumn")+" - "+e.getMessage());
+					log.debug("GBNG import error", e);
+					error(getString("importExport.error.duplicatecolumn"));
 					return;
 				} catch (final IOException e) {
-					log.debug("unknown", e);
-					error(getString("importExport.error.unknown")+" - "+e.getMessage());
+					log.debug("GBNG import error", e);
+					error(getString("importExport.error.unknown"));
 					return;
 				}
 
@@ -139,8 +135,7 @@ public class GradeImportUploadStep extends Panel {
 					processedGradeItems = ImportGradesHelper.processImportedGrades(spreadsheetWrapper, assignments, grades);
 				} catch (final GbImportCommentMissingItemException e) {
 					// TODO would be good if we could show the column here, but would have to return it
-					log.debug("commentnoitem", e);
-					error(getString("importExport.error.commentnoitem")+" - "+e.getMessage());
+					error(getString("importExport.error.commentnoitem"));
 					return;
 				}
 				// if empty there are no users

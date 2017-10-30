@@ -31,7 +31,7 @@ public class ExportPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 
 	@SpringBean(name = "org.sakaiproject.gradebookng.business.GradebookNgBusinessService")
-	protected GradebookNgBusinessService businessService;
+	private GradebookNgBusinessService businessService;
 
 	private static final String CUSTOM_EXPORT_COLUMN_PREFIX = "# ";
 
@@ -227,6 +227,11 @@ public class ExportPanel extends Panel {
 				header.add(String.format("%s%s",
 					CUSTOM_EXPORT_COLUMN_PREFIX,
 					getString("importExport.export.csv.headers.courseGrade")));
+			}
+			if (isCustomExport && this.includeGradeOverride) {
+				header.add(String.format("%s%s",
+					CUSTOM_EXPORT_COLUMN_PREFIX,
+					getString("importExport.export.csv.headers.gradeOverride")));
 			}
 			if (isCustomExport && this.includeLastLogDate) {
 				header.add(String.format("%s%s",
