@@ -34,7 +34,7 @@ services:
     volumes: 
      - ./private/logstash-beats.key:/etc/pki/tls/private/logstash-beats.key
      - ./certs/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
-     - ./elk-data:/var/lib/elasticsearch
+#    - ./elk-data:/var/lib/elasticsearch
     expose:
       - "5601"
       - "9200"

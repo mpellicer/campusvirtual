@@ -9,5 +9,5 @@ do
  else
     echo "Discarting $app_server" 
  fi
-done < "/opt/hosts"
-cat /tmp/temp_file > /opt/hosts	
+done < "/opt/hosts.txt"
+cat /tmp/temp_file > /opt/hosts.txt

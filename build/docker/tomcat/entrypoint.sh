@@ -12,10 +12,10 @@ echo "System configured"
 # Announce the server presence in the shared volume
 if [ -f "/opt/hosts" ]; then
 
-  hostexists=$(grep $HOSTNAME /opt/hosts)
+  hostexists=$(grep $HOSTNAME /opt/hosts.txt)
 
   if [ "$hostexists" != "$HOSTNAME" ]; then
-     echo $HOSTNAME >> /opt/hosts
+     echo $HOSTNAME >> /opt/hosts.txt
   fi
 fi
 

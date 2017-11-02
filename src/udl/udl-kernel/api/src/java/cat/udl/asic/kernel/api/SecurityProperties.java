@@ -38,8 +38,7 @@ public class SecurityProperties extends Properties {
             return Base64.encodeBase64String(encrypted);
 
         } catch (Exception ex) {
-	       		System.out.println(ex);
-
+       		log.error ("Problems ecrypting ", ex);
         }
 
         return null;
@@ -49,7 +48,6 @@ public class SecurityProperties extends Properties {
     private Resource securityPath;
     
     public void setSecurityPath(Resource sp) { securityPath = sp; }
-
 
     public static String decrypt(String key, String initVector, String encrypted) {
 
@@ -66,7 +64,7 @@ public class SecurityProperties extends Properties {
             return new String(original,"UTF-8");
 
         } catch (Exception ex) {
-			System.out.println(ex);
+       		log.error ("Problems decrypting ", ex);
         }
 
         return null;
@@ -90,18 +88,17 @@ public class SecurityProperties extends Properties {
     }
 
     public void init() {
-		log.info ("Loading security keys...");
+	log.info ("Loading security keys...");
         String initVector = "RandomInitVector"; // 16 bytes IV
         try {
         	String securePath = System.getProperty("security.file.path", securityPath.getFile().getAbsolutePath());
-			String securityKey = System.getProperty("security.token");  
-			System.out.println ("securityKey " + securityKey);         	
+		String securityKey = System.getProperty("security.token");  
 
-			Properties prop = new Properties();
+		Properties prop = new Properties();
         	File securityFile = new File(securePath);
         	if (securityFile.exists()) {
-        			log.info("Security keys file found...");
-	        		prop.load(new FileInputStream(securePath));
+       			log.info("Security keys file found...");
+        		prop.load(new FileInputStream(securePath));
 	        	
 	            	for (String entryKey : prop.stringPropertyNames()) {
             			this.put(entryKey, decrypt(securityKey.substring(0,16), initVector, prop.getProperty(entryKey)));
@@ -114,11 +111,7 @@ public class SecurityProperties extends Properties {
         } catch (Exception ex) {
         		log.error ("Problems loading security keys", ex);
         }
-		
-
     }
-	
-
 }
 
 

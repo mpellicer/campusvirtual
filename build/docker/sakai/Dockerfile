@@ -1,6 +1,6 @@
 # This image copies the sakai files to the sakai tomcat container
 
-FROM asicudl/tomcat-sakai-11:dev
+FROM asicudl/tomcat-sakai-11:latest
 
 # Copy all the files in
 COPY sakai-bin/components /home/sakai/server/tomcat/components/

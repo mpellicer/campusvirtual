@@ -29,7 +29,7 @@ services:
     ports:
      - "1521:1521"
 
-networks:
-  default:
-   external:
-    name: br0
+#networks:
+# default:
+#  external:
+#   name: br0

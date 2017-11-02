@@ -3,7 +3,7 @@
 set -e
 
 # This entrypoint sets up the certification files and configures the appropiate balancer members
-if [ -f "/opt/hosts" ]; then
+if [ -f "/opt/hosts.txt" ]; then
    echo 'Mounting hosts from partition'
    #Discard unavailable hosts
    /opt/scripts/discardunavailablehosts.sh

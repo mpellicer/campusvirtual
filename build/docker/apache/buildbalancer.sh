@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f "/opt/enabledhosts" ]; then
+if [ -f "/opt/enabledhosts.txt" ]; then
 
   (
     echo '<Proxy balancer://sakai>'
@@ -13,7 +13,7 @@ if [ -f "/opt/enabledhosts" ]; then
       if route=$(getent hosts ${app_server} | tr '[:space:]' '\n'| grep '^[0-9a-z]\{12\}$') ; then 
         echo BalancerMember ajp://${route}:8009 retry=0 route=$route
       fi
-    done < "/opt/enabledhosts"
+    done < "/opt/enabledhosts.txt"
 
     echo '</Proxy>'
   ) > /etc/apache2/conf-available/sakai-balancer.conf
