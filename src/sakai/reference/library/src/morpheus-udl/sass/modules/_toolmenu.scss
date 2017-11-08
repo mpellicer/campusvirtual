@@ -20,9 +20,9 @@ body.#{$namespace}toolMenu-collapsed{
 	#toolMenuWrap{
 		text-align: center;
 		font-size: 1.05em;
-		max-width: #{ $tool-menu-width / 4 };
+		max-width: #{ $tool-menu-width / 3};
 		min-width: #{ $tool-menu-width / 4 };
-		width: #{ $tool-menu-width / 4 };
+		width: #{ $tool-menu-width / 3 };
 	}
 	#toolMenu, ul#subSites{
 		.img_site_toolmenu{
