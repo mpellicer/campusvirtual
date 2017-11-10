@@ -25,11 +25,13 @@ import org.sakaiproject.gradebookng.business.GbGradingType;
 import org.sakaiproject.gradebookng.business.GbRole;
 import org.sakaiproject.gradebookng.business.GradebookNgBusinessService;
 import org.sakaiproject.gradebookng.business.model.GbGroup;
+import org.sakaiproject.gradebookng.business.util.FormatHelper;
 import org.sakaiproject.gradebookng.tool.component.GbAjaxButton;
 import org.sakaiproject.gradebookng.tool.component.GbFeedbackPanel;
 import org.sakaiproject.gradebookng.tool.model.GradebookUiSettings;
 import org.sakaiproject.gradebookng.tool.pages.GradebookPage;
 import org.sakaiproject.service.gradebook.shared.Assignment;
+import org.sakaiproject.util.FormattedText;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,8 +56,6 @@ public class UpdateUngradedItemsPanel extends Panel {
 
 	private final IModel<Long> model;
 
-	private static final double DEFAULT_GRADE = 0;
-
 	public UpdateUngradedItemsPanel(final String id, final IModel<Long> model, final ModalWindow window) {
 		super(id);
 		this.model = model;
@@ -75,7 +75,7 @@ public class UpdateUngradedItemsPanel extends Panel {
 
 		// form model
 		final GradeOverride override = new GradeOverride();
-		override.setGrade(String.valueOf(DEFAULT_GRADE));
+		override.setGrade(",".equals(FormattedText.getDecimalSeparator()) ? "0,0" : "0.0");
 		final CompoundPropertyModel<GradeOverride> formModel = new CompoundPropertyModel<GradeOverride>(override);
 
 		// build form
@@ -93,7 +93,10 @@ public class UpdateUngradedItemsPanel extends Panel {
 				final Assignment assignment = UpdateUngradedItemsPanel.this.businessService.getAssignment(assignmentId);
 
 				try {
-					final Double overrideValue = Double.valueOf(override.getGrade());
+					if(!FormatHelper.isValidDouble(override.getGrade())){
+						throw new NumberFormatException();
+					}
+					final Double overrideValue = FormatHelper.validateDouble(override.getGrade());
 					final GbGroup group = override.getGroup();
 
 					if (isExtraCredit(overrideValue, assignment, gradingType)) {

@@ -1472,7 +1472,7 @@ public class GradebookNgBusinessService {
 				// TODO if this is slow doing it one by one, might be able to
 				// batch it
 				this.gradebookService.saveGradeAndCommentForStudent(gradebook.getUid(), assignmentId, studentUuid,
-						String.valueOf(grade), null);
+						FormatHelper.formatGradeForDisplay(String.valueOf(grade)), null);
 			}
 			return true;
 		} catch (final Exception e) {
