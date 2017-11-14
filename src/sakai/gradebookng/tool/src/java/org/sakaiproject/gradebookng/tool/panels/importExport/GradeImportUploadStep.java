@@ -29,6 +29,7 @@ import org.sakaiproject.gradebookng.tool.pages.GradebookPage;
 import org.sakaiproject.gradebookng.tool.pages.ImportExportPage;
 import org.sakaiproject.service.gradebook.shared.Assignment;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.util.FormattedText;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import lombok.extern.slf4j.Slf4j;
@@ -101,7 +102,7 @@ public class GradeImportUploadStep extends Panel {
 				// TODO would be nice to capture the values from these exceptions
 				ImportedSpreadsheetWrapper spreadsheetWrapper = null;
 				try {
-					spreadsheetWrapper = ImportGradesHelper.parseImportedGradeFile(upload.getInputStream(), upload.getContentType(), upload.getClientFileName(), userMap);
+					spreadsheetWrapper = ImportGradesHelper.parseImportedGradeFile(upload.getInputStream(), upload.getContentType(), upload.getClientFileName(), userMap, FormattedText.getDecimalSeparator());
 				} catch (final GbImportExportInvalidColumnException e) {
 					log.debug("GBNG import error", e);
 					error(getString("importExport.error.incorrectformat"));
