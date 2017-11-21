@@ -5,7 +5,7 @@
 
 	<artifactId>sakai-deploy-conf</artifactId>
 	<groupId>cat.udl.asic.sakai</groupId>
-	<version>11.2-udl</version>
+	<version>11.3-udl</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -15,7 +15,7 @@
 	<parent>
 		<artifactId>master</artifactId>
 		<groupId>org.sakaiproject</groupId>
-		<version>11.2</version>
+		<version>11.3</version>
 		<relativePath>../src/sakai/master/pom.xml</relativePath>
 	</parent>
 
