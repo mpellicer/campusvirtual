@@ -320,6 +320,34 @@
 		
    </bean>   
    
+   <bean id="canviAnyDoctorat" class="cat.udl.asic.jobs.canviAnyDoctorat" scope="singleton" init-method="init">		
+		
+   		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />						
+		<property name="groupProvider" ref="org.sakaiproject.authz.api.GroupProvider" />
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService" />
+		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
+					
+   	</bean>
+   	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.canviAnyDoctorat"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		scope="singleton" init-method="init">
+		
+		<property name="beanId">
+			<value>canviAnyDoctorat</value>
+		</property>
+      
+		<property name="jobName">
+		<value>Canvi dels grups de doctorat</value>
+		</property>
+		
+      	<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+   </bean>   
+   
    	<bean id="notificaGrupsNous" class="cat.udl.asic.jobs.notificaGrupsNous" scope="singleton" init-method="init">		
 		<property name="securityService"
         ref="org.sakaiproject.authz.api.SecurityService" />        
