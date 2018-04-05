@@ -162,7 +162,7 @@ public class NewUserProducer extends BaseValidationProducer implements ViewCompo
 		}
 		UIMessage.make(tofill, "welcome2", "validate.welcome2", args);
 
-		String otp = "accountValidationLocator." + va.getId();
+		String otp = "accountValidationLocator." + va.getValidationToken();
 		UIBranchContainer firstNameContainer = UIBranchContainer.make(detailsForm, "firstNameContainer:");
 		UIMessage.make(firstNameContainer, "lblFirstName", "firstname");
 		UIInput.make(detailsForm, "firstName", otp + ".firstName", u.getFirstName());
@@ -201,8 +201,6 @@ public class NewUserProducer extends BaseValidationProducer implements ViewCompo
 				"<a href='" +  termsURL + "' target='_new'>" + messageLocator.getMessage("terms.link")+"</a>"
 			});
 			UIVerbatim.make(termsRow, "termsLabel", terms);
-		}
-
-		detailsForm.parameters.add(new UIELBinding(otp + ".userId", va.getUserId()));
+		}	
 	}
 }
