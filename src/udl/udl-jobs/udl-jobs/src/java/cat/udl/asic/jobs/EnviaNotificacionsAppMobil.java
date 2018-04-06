@@ -246,7 +246,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 				                	M_log.debug("EnviaNotifAppMobil: Hem eliminat el registre "+entityReference);
 				                }
 				                else {
-				                	M_log.warn("EnviaNotifAppMobil: Server returned error");
+				                	M_log.warn("EnviaNotifAppMobil: Server returned error "+entityReference);
 				                }
 							}
 							else {
@@ -277,18 +277,26 @@ public class EnviaNotificacionsAppMobil implements Job {
 					                	M_log.debug("EnviaNotifAppMobil: Hem eliminat el registre "+entityReference);
 					                }
 					                else {
-					                	M_log.warn("EnviaNotifAppMobil: Server returned error");
+					                	M_log.warn("EnviaNotifAppMobil: Server returned error "+entityReference);
 					                }
 								}
 								else if (access.equals("grouped")) {
 									// només als membres dels grups autoritzats
 									Collection <String> groupIds = msgHeader.getGroups();
 									String groupMembers = "[";
+									boolean listEmpty = true;
+									boolean firstGroupNotEmpty = true;
 									for(Iterator groupsIter = groupIds.iterator(); groupsIter.hasNext();) {
 											String groupId = (String) groupsIter.next();
 											M_log.debug ("EnviaNotifAppMobil: GroupId " +groupId);
 											AuthzGroup authzGroup = instanciaAuthzGroupService.getAuthzGroup(groupId);
 											Set membersGroup = authzGroup.getMembers();
+											if (!membersGroup.isEmpty()) {
+												listEmpty = false;
+												if (!firstGroupNotEmpty) {
+													// si no és el primer grup no buit cal afegir la coma
+													groupMembers = groupMembers + ",";
+												}
 								                for(Iterator membersGroupIter = membersGroup.iterator(); membersGroupIter.hasNext();) {
 								                	 Member memberGroup = (Member) membersGroupIter.next();
 								                	 String userEidGroup = (String) memberGroup.getUserEid();
@@ -298,28 +306,42 @@ public class EnviaNotificacionsAppMobil implements Job {
 									                		groupMembers = groupMembers + ",";
 									                	}
 								                }
-								            if (groupsIter.hasNext()){
-								            	groupMembers = groupMembers + ",";
-								            } else {
-								            	groupMembers = groupMembers + "]";
-								            }
+								                if (groupsIter.hasNext()){
+								                	firstGroupNotEmpty = false;	
+									            } 
+											}
 									}
-									if (send(httpclient,subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,groupMembers)) {
-					                	M_log.debug("EnviaNotifAppMobil: Missatge enviat correctament als membres dels grups autoritzats");
-					                	M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
+									groupMembers = groupMembers + "]";
+									if (listEmpty) {
+										// si tots els grups són buits la llista queda buida
+										M_log.warn("EnviaNotifAppMobil: Lista de membres buida");
+										M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
 					                	deleteStmt = connection.prepareStatement(MESSAGES_TO_DELETE);
 					                	deleteStmt.setString(1, entityReference);
 					                	deleteStmt.executeUpdate();
 					                	connection.commit();
 					                	deleteStmt.close();
 					                	M_log.debug("EnviaNotifAppMobil: Hem eliminat el registre "+entityReference);
-					                }
-					                else {
-					                	M_log.warn("EnviaNotifAppMobil: Server returned error");
-					                }
+										
+									}
+									else {
+										if (send(httpclient,subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,groupMembers)) {
+						                	M_log.debug("EnviaNotifAppMobil: Missatge enviat correctament als membres dels grups autoritzats");
+						                	M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
+						                	deleteStmt = connection.prepareStatement(MESSAGES_TO_DELETE);
+						                	deleteStmt.setString(1, entityReference);
+						                	deleteStmt.executeUpdate();
+						                	connection.commit();
+						                	deleteStmt.close();
+						                	M_log.debug("EnviaNotifAppMobil: Hem eliminat el registre "+entityReference);
+						                }
+						                else {
+						                	M_log.warn("EnviaNotifAppMobil: Server returned error "+entityReference);
+						                }
+									}
 								}
 								else {
-									M_log.warn ("EnviaNotifAppMobil: access no és ni channel ni grouped ");
+									M_log.warn ("EnviaNotifAppMobil: access no és ni channel ni grouped "+entityReference);
 								}
 							}		
 						}
