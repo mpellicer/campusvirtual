@@ -91,6 +91,7 @@
 		<tool id = "sakai.forums" />
 		<tool id = "sakai.assignment" />
 		<tool id = "sakai.lessonbuildertool" />
+		<tool id = "sakai.bbc"  />
 		<tool id = "sakai.sitestats" />
 		<tool id = "sakai.samigo" />
 		<tool id = "sakai.rwiki" />
@@ -177,6 +178,7 @@
 		<tool id = "sakai.lessonbuildertool" />
 		<tool id = "sakai.samigo" />
 		<tool id = "sakai.rwiki" />
+		<tool id = "sakai.bbc"  />
 		<tool id = "sakai.sitestats" />
 		<tool id = "sakai.news" />
 		<tool id = "sakai.presentation" />
