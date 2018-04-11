@@ -1,5 +1,61 @@
 <?xml version="1.0"?>
 <registration>
+
+<tool
+                        id="sakai.bbc"
+                        title="Videconferència Blackboard Collaborate"
+                        description="Eina per fer sales de videoconferència a la que poden assistir els membres d'un espai">
+
+                <configuration name="sakai:portlet-pre-render" value="true" />
+
+                <category name="course" />
+                <category name="projectedocent" />
+
+                <configuration name="functions.require" />
+
+                <configuration name="imsti.launch" value="https://bbburl.com/launcher" />
+                <configuration name="imsti.xml" />
+                <configuration name="imsti.secret" value="secret" />
+                <configuration name="imsti.key" value="bbckey" />
+
+                <configuration name="imsti.pagetitle" value="Videoconferència BBC" />
+                <configuration name="imsti.tooltitle" value="Videoconferència BBC" />
+                <configuration name="imsti.newpage" value="off"/>
+                <configuration name="imsti.maximize" value="false" />
+                <configuration name="imsti.frameheight" value="3100" />
+                <configuration name="imsti.debug" value="false" />
+                <configuration name="imsti.releasename" value="true"/>  
+                <configuration name="imsti.releaseemail" value="true"/> 
+                <configuration name="imsti.custom" />
+                <configuration name="imsti.allowsettings" value="false" />
+                <configuration name="imsti.allowroster" value="false"/>
+                <configuration name="imsti.allowroutcomes" value="false"/>
+                <configuration name="imsti.contentlink"  />
+                <configuration name="imsti.splash" value="" />
+                
+
+                <configuration name="final.launch" value="true"/>
+                <configuration name="final.xml" value="true"/>
+                <configuration name="final.secret" value="true"/>
+                <configuration name="final.key" value="true"/>
+
+                <configuration name="final.pagetitle" value="true"/>
+                <configuration name="final.tooltitle" value="true"/>
+                <configuration name="final.newpage" value="true"/>
+                <configuration name="final.maximize" value="true"/>
+                <configuration name="final.frameheight" value="true"/>
+                <configuration name="final.debug" value="true"/>
+                <configuration name="final.releasename" value="true"/>
+                <configuration name="final.releaseemail" value="true"/>
+                <configuration name="final.custom" value="true"/>
+                <configuration name="final.allowsettings" value="true"/>
+                <configuration name="final.allowroster" value="true"/>
+                <configuration name="final.allowoutcomes" value="true"/>
+                <configuration name="final.contentlink" value="false"/>
+                <configuration name="final.splash" value="false"/>
+        </tool>
+
+
 <tool
                         id="sakai.guiadocent.ice"
                         title="Guia docent UdL"
