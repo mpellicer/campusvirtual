@@ -23,13 +23,13 @@
                 <configuration name="imsti.newpage" value="off"/>
                 <configuration name="imsti.maximize" value="false" />
                 <configuration name="imsti.frameheight" value="3100" />
-                <configuration name="imsti.debug" value="false" />
-                <configuration name="imsti.releasename" value="true"/>  
-                <configuration name="imsti.releaseemail" value="true"/> 
+                <configuration name="imsti.debug" value="off" />
+                <configuration name="imsti.releasename" value="on"/>  
+                <configuration name="imsti.releaseemail" value="on"/> 
                 <configuration name="imsti.custom" />
-                <configuration name="imsti.allowsettings" value="false" />
-                <configuration name="imsti.allowroster" value="false"/>
-                <configuration name="imsti.allowroutcomes" value="false"/>
+                <configuration name="imsti.allowsettings" value="on" />
+                <configuration name="imsti.allowroster" value="off"/>
+                <configuration name="imsti.allowroutcomes" value="off"/>
                 <configuration name="imsti.contentlink"  />
                 <configuration name="imsti.splash" value="" />
                 
@@ -51,8 +51,8 @@
                 <configuration name="final.allowsettings" value="true"/>
                 <configuration name="final.allowroster" value="true"/>
                 <configuration name="final.allowoutcomes" value="true"/>
-                <configuration name="final.contentlink" value="false"/>
-                <configuration name="final.splash" value="false"/>
+                <configuration name="final.contentlink" value="true"/>
+                <configuration name="final.splash" value="true" />
         </tool>
 
 
