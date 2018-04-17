@@ -22,7 +22,7 @@
                 <configuration name="imsti.tooltitle" value="Videoconferència (Collaborate)" />
                 <configuration name="imsti.newpage" value="off"/>
                 <configuration name="imsti.maximize" value="false" />
-                <configuration name="imsti.frameheight" value="3100" />
+                <configuration name="imsti.frameheight" />
                 <configuration name="imsti.debug" value="off" />
                 <configuration name="imsti.releasename" value="on"/>  
                 <configuration name="imsti.releaseemail" value="on"/> 
