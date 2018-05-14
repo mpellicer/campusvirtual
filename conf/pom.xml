@@ -531,6 +531,18 @@
 											<value>${sakai.config.guiadocent.secret}</value>
 										</replacement>
 										<replacement>
+											<token>TOKEN_BBC_SERVER_URL</token>
+											<value>${sakai.config.bbc.url}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN_BBC_KEY</token>
+											<value>${sakai.config.bbc.key}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN_BBC_SECRET</token>
+											<value>${sakai.config.bbc.secret}</value>
+										</replacement>
+										<replacement>
 											<token>TOKEN_BBB_SERVER_URL</token>
 											<value>${sakai.config.bbb.url}</value>
 										</replacement>
