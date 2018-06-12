@@ -29,7 +29,7 @@
 			<id>proasic</id>
 			<name>UdL local repository</name>
 			<layout>default</layout>
-			<url>https://proasic.udl.cat/m2</url>
+			<url>http://proasic.udl.cat/m2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
