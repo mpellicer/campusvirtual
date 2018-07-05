@@ -138,7 +138,7 @@
         <configuration name="functions.require" />
     </tool>
     
-        <tool
+    <tool
             id="sakai.iframe.actes"
             title="Actes page"
             description="Display actes information">
@@ -152,6 +152,22 @@
         <!-- Allow this to be set -->
         <configuration name="functions.require" />
     </tool>
+    
+    <tool
+	        id="sakai.iframe.biblioteca"
+            title="Biblioteca"
+            description="Bilioteca">
+
+		<configuration name="source" value="https://biblioguies.udl.cat/CercaTot" type="final"/> 
+        <configuration name="height" value="2400px" type="final" />
+        <configuration name="popup" value="false" type="final" />
+        <configuration name="reset.button" value="false" type="final" />
+
+        <!-- Allow this to be set -->
+        <configuration name="functions.require" />
+    </tool>
+    
+
     
 
 </registration>

@@ -56,6 +56,13 @@
 }
 
 
+.#{$namespace}toolBody--sakai-iframe-biblioteca
+{
+	/* Margen superior per a l'eina de biblioteca */
+	margin-top: 35px;
+}
+
+
 .#{$namespace}sakai-guiadocent-ice {
 	.#{$namespace}toolTitleNav__link--edit {
 		display:none;
@@ -67,3 +74,10 @@
 		display:none;
 	}
 }
+
+.#{$namespace}sakai-iframe-biblioteca {
+	.#{$namespace}toolTitleNav__link--edit {
+		display:none;
+	}
+}
+
