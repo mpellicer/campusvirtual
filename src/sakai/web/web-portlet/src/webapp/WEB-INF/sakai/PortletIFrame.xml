@@ -158,7 +158,7 @@
             title="Biblioteca"
             description="Bilioteca">
 
-		<configuration name="source" value="https://biblioguies.udl.cat/CercaTot" type="final"/> 
+		<configuration name="source" value="https://biblioguies.udl.cat/campusvirtual" type="final"/> 
         <configuration name="height" value="2400px" type="final" />
         <configuration name="popup" value="false" type="final" />
         <configuration name="reset.button" value="false" type="final" />
