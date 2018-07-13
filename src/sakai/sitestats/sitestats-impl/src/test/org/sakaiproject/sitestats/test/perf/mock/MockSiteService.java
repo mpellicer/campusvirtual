@@ -192,6 +192,13 @@ public class MockSiteService implements SiteService {
 	}
 
 	@Override
+	public boolean allowAddProjectedocentSite() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
 	public boolean allowAddProjectSite() {
 		// TODO Auto-generated method stub
 		return false;

@@ -199,8 +199,8 @@ public class courseManagementSincro implements Job {
 	        				while (iter.hasNext()) {
 	        							Section seccio = (Section) iter.next();
 	        							String categoria = seccio.getCategory();
-	        							// a l'espai només afegim els grups de matrícula i el grup de professors
-	        							if (categoria.equals("GRUP_MAT") || categoria.equals("GRUP_TA")) {
+	        							// a l'espai només afegim els grups de matrícula i de pràctiques matriculables i el grup de professors
+	        							if (categoria.equals("GRUP_MAT") || categoria.equals("GRUP_TA") || categoria.equals("GRUP_PM")) {
 	        								//log.debug("Afegim al site la secció: "+seccio.getEid());
 	        								llistaProveidors.add(seccio.getEid());
 	        							}
