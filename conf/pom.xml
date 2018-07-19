@@ -782,6 +782,8 @@
 											<directory>target/${serverConfId}/tomcat/</directory>
 											<includes>
 												<include>bin/setenv.sh</include>
+												<include>bin/start_with_yjp.sh</include>
+												<include>bin/libyjpagent.so</include>
 												<include>conf/context.xml</include>
 												<include>conf/catalina.properties</include>
 												<include>conf/server.xml</include>
