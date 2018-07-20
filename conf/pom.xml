@@ -672,8 +672,8 @@
 									<outputDir>target/${serverConfId}</outputDir>
 									<includes>
 										<include>tomcat/bin/setenv.sh</include>
-										<include>bin/start_with_yjp.sh</include>
-										<include>bin/libyjpagent.so</include>
+										<include>tomcat/bin/start_with_yjp.sh</include>
+										<include>tomcat/bin/libyjpagent.so</include>
 										<include>tomcat/conf/context.xml</include>
 										<include>tomcat/conf/catalina.properties</include>
 										<include>tomcat/conf/server.xml</include>
