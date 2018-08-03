@@ -5,7 +5,7 @@
     <parent>
         <artifactId>master</artifactId>
         <groupId>org.sakaiproject</groupId>
-        <version>11.2</version>
+        <version>11.3</version>
     </parent>
     
     <name>Udl Tools deployer</name>
@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 	
 	<modules>
-		<module>bbb-tool</module>
+		<!--  <module>bbb-tool</module> -->
 		<module>umusync</module>
 		<module>urkund-antiplagiarism/contentreview-impl</module>
 	</modules>    
