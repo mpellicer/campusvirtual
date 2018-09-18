@@ -1278,7 +1278,7 @@ public class PrivateMessageManagerImpl extends HibernateDaoSupport implements
 	  fromString.append("</p>");
 
 	  body.insert(0, fromString.toString());
-
+	  
 	  // need to determine if there are "hidden" recipients to this message.
 	  // If so, we need to replace them with "Undisclosed Recipients"
 	  // Identifying them is tricky now because hidden users are identified by having their
@@ -1329,6 +1329,7 @@ public class PrivateMessageManagerImpl extends HibernateDaoSupport implements
 
 	  body.insert(0, "<p>" + getResourceBundleString("pvt_email_to", new Object[] {sendToString}) + "<p/>");
 
+
 	  if (message.getAttachments() != null && message.getAttachments().size() > 0) {
 
 		  body.append("<br/><br/>");
@@ -1360,7 +1361,7 @@ public class PrivateMessageManagerImpl extends HibernateDaoSupport implements
 		  }
 	  }
 
-	  String footer = "<p>----------------------<br>" +
+	  String footer = "<p><br>" +
 	      getResourceBundleString(EMAIL_FOOTER1) + " " + ServerConfigurationService.getString("ui.service","Sakai") +
 	  " " + getResourceBundleString(EMAIL_FOOTER2) + " \"" +
 	  siteTitle + "\" " + getResourceBundleString(EMAIL_FOOTER3) + "\n" +
@@ -1373,8 +1374,9 @@ public class PrivateMessageManagerImpl extends HibernateDaoSupport implements
 	  "\">";
 
 
-	  footer += siteTitle + "</a>.</p>";                      
-	  body.append(footer);
+	  footer += siteTitle + "</a>.</p><p>----------------------</p>";    	  
+	  body.insert(0,footer);
+
 
 	  String bodyString = body.toString();
 	  return bodyString;
@@ -1388,6 +1390,9 @@ public class PrivateMessageManagerImpl extends HibernateDaoSupport implements
   {
 	  markMessageAsReadForUser(message, getContextId());
    }
+  
+  
+  
 
   /**
    * FOR SYNOPTIC TOOL:
