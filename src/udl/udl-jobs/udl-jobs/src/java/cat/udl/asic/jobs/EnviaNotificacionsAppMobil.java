@@ -570,7 +570,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 				+ "},\n"
 				+ "\"message\": {\n "
 				+ "		\"title\": \""+ subjectEscapat + "\",\n "
-				+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+				+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + StringEscapeUtils.escapeJson(siteTitle) + "\"\n"
 				+ "}\n"
 				+ "}";
 		
@@ -634,7 +634,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 											+ "},\n"
 											+ "\"message\": {\n "
 											+ "		\"title\": \""+ subjectEscapat + "\",\n "
-											+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+											+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + StringEscapeUtils.escapeJson(siteTitle) + "\"\n"
 											+ "}\n"
 											+ "}";
 								   
@@ -706,7 +706,7 @@ private boolean sendCRUECategory  (String subject, String author, String content
 					+ "},\n"
 					+ "\"message\": {\n "
 					+ "		\"title\": \""+ subjectEscapat + "\",\n "
-					+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+					+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + StringEscapeUtils.escapeJson(siteTitle) + "\"\n"
 					+ "}\n"
 					+ "}";
 			
@@ -726,7 +726,7 @@ private boolean sendCRUECategory  (String subject, String author, String content
 					int postResponseCode = response.getStatusLine().getStatusCode();
 					
 					M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode + "Reason " + response.getStatusLine().getReasonPhrase());
-					//M_log.debug("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
+						
 					 if (postResponseCode != 200) {
 						   M_log.debug("EnviaNotifAppMobil: Server CRUE response is not OK, prove");
 					 }
