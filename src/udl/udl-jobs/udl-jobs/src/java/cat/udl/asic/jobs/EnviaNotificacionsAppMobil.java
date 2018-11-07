@@ -466,8 +466,8 @@ public class EnviaNotificacionsAppMobil implements Job {
 	}
 
 	private boolean send(String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String receptientsIds,boolean isCategory) throws Exception {
-		boolean sentUdL = true;
-		boolean sentCRUE = true;
+		boolean sentUdL = false;
+		boolean sentCRUE = false;
 		
 		if ("true".equals (instanciaServerConfigurationService.getString("appMobil.AppUdL.enabled"))) {
 			String categoriesIds;
