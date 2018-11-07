@@ -35,6 +35,7 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.ToolConfiguration;
 
 import org.sakaiproject.component.api.ServerConfigurationService;
+import org.sakaiproject.util.FormattedText;
 
 import java.util.Collection;
 import java.util.Set;
@@ -50,12 +51,32 @@ import java.sql.SQLException;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 //Codi per les connexions al servei de missatgeria
-import org.apache.commons.httpclient.HttpClient;
-//import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope; 
-import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.client.AuthCache;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.util.EntityUtils;
+
+
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+
+
 import java.io.IOException;
 
 import org.sakaiproject.time.api.Time;
@@ -76,6 +97,8 @@ public class EnviaNotificacionsAppMobil implements Job {
 	private SiteService instanciaSiteService;
 	private ServerConfigurationService instanciaServerConfigurationService;
 	private TimeService instanciaTimeService;
+	private HttpClientContext httpclientContextAppUdL;
+	 
 	
 	
 	
@@ -154,17 +177,21 @@ public class EnviaNotificacionsAppMobil implements Job {
 		PreparedStatement stmt = null;
 		ResultSet rst = null;
 		String entityReference = "";
-		
-		
+			
 		//Activem l'opció per permetre canviar dades
 		enableSecurityAdvisor();
 		
 		try {
-			HttpClient httpclient = authenticate();
-			if (httpclient == null) {
-				M_log.warn("EnviaNotifAppMobil: Authentication to server failed");
-				//return;
+
+			//Treballarem amb dos servidors de notificacions, per tant mirarem si estan activats per inicialitzar-los
+			if ("true".equals (instanciaServerConfigurationService.getString("appMobil.AppUdL.enabled"))) {
+				httpclientContextAppUdL = authenticateUdL();
+				if (httpclientContextAppUdL == null) {
+					M_log.warn("EnviaNotifAppMobil: Authentication to server AppUdL failed");
+					//return;
+				}
 			}
+			
 			connection = sqlService.borrowConnection();
 			M_log.debug ("EnviaNotifAppMobil: Preparem statement "+MESSAGES_TO_PUSH);
 			stmt = connection.prepareStatement(MESSAGES_TO_PUSH);
@@ -234,8 +261,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 							// comprovem si l'espai té definida una categoryId
 							if (categoryId != null){
 								// si està definit el categoryId s'envia com a recipientIds
-								categoryId = "[\""+categoryId+"\"]";
-								if (send(httpclient,subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,categoryId)) {
+								if (send(subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,categoryId,true)) {
 				                	M_log.debug("EnviaNotifAppMobil: Missatge enviat correctament a la categoria "+categoryId);
 				                	M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
 				                	deleteStmt = connection.prepareStatement(MESSAGES_TO_DELETE);
@@ -266,7 +292,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 					                		siteMembers = siteMembers + "]";
 					                	}
 					                }
-					                if (send(httpclient,subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,siteMembers)) {
+					                if (send(subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,siteMembers,false)) {
 					                	M_log.debug("EnviaNotifAppMobil: Missatge enviat correctament als membres del site");
 					                	M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
 					                	deleteStmt = connection.prepareStatement(MESSAGES_TO_DELETE);
@@ -325,7 +351,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 										
 									}
 									else {
-										if (send(httpclient,subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,groupMembers)) {
+										if (send(subject,messageAuthor,body,msgContext,site.getTitle(),notificationUrl,groupMembers,false)) {
 						                	M_log.debug("EnviaNotifAppMobil: Missatge enviat correctament als membres dels grups autoritzats");
 						                	M_log.debug("EnviaNotifAppMobil: Procedim a eliminar el registre "+entityReference);
 						                	deleteStmt = connection.prepareStatement(MESSAGES_TO_DELETE);
@@ -387,47 +413,95 @@ public class EnviaNotificacionsAppMobil implements Job {
 		}
 	}
 
-	private HttpClient authenticate() throws Exception {
-		HttpClient httpclient = new HttpClient();
+	private HttpClientContext authenticateUdL() throws Exception {
 		
-		String urlAuthAppMobilServer = instanciaServerConfigurationService.getString("appMobil.urlServerAuth"); 
-		String userAppMobilServer = instanciaServerConfigurationService.getString("appMobil.user"); 
-		String pwdAppMobilServer = instanciaServerConfigurationService.getString("appMobil.password"); 
+		String urlAuthAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppUdL.urlServerAuth"); 
+		String AuthAppMobilHost = instanciaServerConfigurationService.getString("appMobil.AppUdL.hostAuth");
+		String AuthAppMobilPort = instanciaServerConfigurationService.getString("appMobil.AppUdL.portAuth");
+		String userAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppUdL.user"); 
+		String pwdAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppUdL.password"); 
 
-		M_log.debug ("EnviaNotifAppMobil: Url a la que autentiquem "+urlAuthAppMobilServer);
+		M_log.debug ("EnviaNotifAppMobil: Url a la que autentiquem ");
         
-        httpclient.getState().setCredentials(
-         	AuthScope.ANY,
-         	new UsernamePasswordCredentials(userAppMobilServer, pwdAppMobilServer)
-        );
-	       
-		   PostMethod post = new PostMethod(urlAuthAppMobilServer);
-		   post.setDoAuthentication( true );
+		HttpHost targetHost = new HttpHost(AuthAppMobilHost, Integer.parseInt(AuthAppMobilPort));
+		
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope(AuthAppMobilHost, Integer.parseInt(AuthAppMobilPort)),
+                new UsernamePasswordCredentials(userAppMobilServer, pwdAppMobilServer));
+        
+        AuthCache authCache = new BasicAuthCache();
+        authCache.put(targetHost, new BasicScheme());
+         
+        // Add AuthCache to the execution context
+        HttpClientContext context = HttpClientContext.create();
+        context.setCredentialsProvider(credsProvider);
+        context.setAuthCache(authCache);
+        
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+
+       	HttpPost post = new HttpPost (urlAuthAppMobilServer);
 		   
-           try {
-        	   int response = httpclient.executeMethod(post);
-        	   		M_log.debug("EnviaNotifAppMobil: Server response is "+response);
-        	   		//System.out.println("EnviaNotiAppMobil -- Response post "+post.getResponseBodyAsString());	
-	        }catch (Exception ex){
-	        	ex.printStackTrace();
-	        	httpclient = null;
-	        }
-           finally {
-	        	 post.releaseConnection();
-           }
+         try {
+           CloseableHttpResponse response = httpclient.execute(post,context);
+           M_log.debug("EnviaNotifAppMobil: Server Auth response is " + response.getStatusLine().getStatusCode());
+           response.close ();
+	    }catch (Exception ex){
+	      	ex.printStackTrace();
+	      	context = null;
+	    }
+        finally {
+          httpclient.close();
+        }
+        
+        return context;
+	}
+
+	
+	private HttpClient authenticateCRUE() throws Exception {
+		CloseableHttpClient httpclient = HttpClients.custom()
+				.build();
+		
            return httpclient;
 	}
+
+	private boolean send(String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String receptientsIds,boolean isCategory) throws Exception {
+		boolean sentUdL = true;
+		boolean sentCRUE = true;
+		
+		if ("true".equals (instanciaServerConfigurationService.getString("appMobil.AppUdL.enabled"))) {
+			String categoriesIds;
+			
+			if (isCategory){
+				categoriesIds = "[\""+receptientsIds+"\"]";
+				sentUdL = sendUdL (subject,author,content,siteId,siteTitle,notificationUrl,categoriesIds);
+			}else {
+				sentUdL = sendUdL (subject,author,content,siteId,siteTitle,notificationUrl,receptientsIds);	
+			}
+		}
+		
+		if ("true".equals (instanciaServerConfigurationService.getString("appMobil.AppCRUE.enabled"))) {
+			if (isCategory) {
+				sentCRUE = sendCRUECategory(subject,author,content,siteId,siteTitle,notificationUrl,receptientsIds);
+			}else {
+				sentCRUE = sendCRUE(subject,author,content,siteId,siteTitle,notificationUrl,receptientsIds);	
+			}
+			
+		}
+
+		return sentCRUE || sentUdL;
+	}
 	
-	private boolean send(HttpClient httpclient, String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String receptientsIds) throws Exception {
+	private boolean sendUdL(String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String receptientsIds) throws Exception {
+			
+			CloseableHttpClient httpclient = HttpClients.createDefault();
+			
 			
 			boolean retorn = false;
 			String subjectEscapat = StringEscapeUtils.escapeJson(subject);
 			String authorEscapat = StringEscapeUtils.escapeJson(author);
 			String bodyEscapat = StringEscapeUtils.escapeJson(content);
-			String urlMessagesAppMobilServer = instanciaServerConfigurationService.getString("appMobil.urlMessages"); 
-			//System.out.println(" Subject escapat "+subjectEscapat);
-			//System.out.println(" Body escapat " +bodyEscapat);
-			
+			String urlMessagesAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppUdL.urlMessages"); 
 			
 			String JSON_STRING = "{"
 						+ "\"subject\":\""+ subjectEscapat+ "\"," 
@@ -438,27 +512,227 @@ public class EnviaNotificacionsAppMobil implements Job {
 						+ "\"notiURL\":\""+notificationUrl+ "\","
 						+ "\"receptientsIds\":"+ receptientsIds+ "}";
 			
-			// System.out.println(" La string que enviem " +JSON_STRING);
-			//System.out.println(" Url a la que enviem " +urlMessagesAppMobilServer);		
+			StringEntity requestEntity = new StringEntity(
+				    JSON_STRING);
 			
-			
-			StringRequestEntity requestEntity = new StringRequestEntity(
-				    JSON_STRING,
-				    "application/json",
-				    "UTF-8");
-			PostMethod postMessage = new PostMethod(urlMessagesAppMobilServer);
-			postMessage.setRequestEntity(requestEntity);
+			HttpPost postMessage = new HttpPost(urlMessagesAppMobilServer);
+			postMessage.setEntity(requestEntity);
+			postMessage.setHeader("Accept", "application/json");
+		    postMessage.setHeader("Content-type", "application/json");
+		    
 			try {
-				if (httpclient != null) {
-					int postResponseCode = httpclient.executeMethod(postMessage);
-					M_log.debug("EnviaNotifAppMobil: Server response is "+postResponseCode);
-					//System.out.println("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
+				if (httpclientContextAppUdL != null) {
+					
+					HttpResponse response = httpclient.execute(postMessage,httpclientContextAppUdL); 
+					int postResponseCode = response.getStatusLine().getStatusCode();
+					
+					M_log.debug("EnviaNotifAppMobil: ServerUdL response is "+postResponseCode);
+					//M_log.debug("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
 					 if (postResponseCode != 200) {
-						   M_log.debug("EnviaNotifAppMobil: Server response is not OK");
+						   M_log.debug("EnviaNotifAppMobil: ServerUdL response is not OK");
 					   }
 					   else {
 						   retorn = true;
 					   }
+				}
+				else {
+					M_log.debug("EnviaNotifAppMobil: httpclientContextAppUdL is null");
+				}
+				
+	        }catch (Exception ex){
+	        	ex.printStackTrace();
+	        }
+           finally {
+        	   httpclient.close();
+	        } 
+		   return retorn;
+	    }
+	
+	private boolean sendCRUE  (String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String receptientsIds) throws Exception {
+		
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		
+		boolean retorn = false;
+		String subjectEscapat = StringEscapeUtils.escapeJson(subject);
+		String authorEscapat = StringEscapeUtils.escapeJson(author);
+		String bodyEscapat = StringEscapeUtils.escapeJson(convertFormattedHtmlTextToPlaintext(content));
+		String urlMessagesAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppCRUE.urlMessages"); 
+		String importCode = instanciaServerConfigurationService.getString("appMobil.AppCRUE.importCode");
+		String token = instanciaServerConfigurationService.getString("appMobil.AppCRUE.token");
+		
+		String JSON_STRING= "{\n"
+				+ "\"import_code\" : \""+ importCode +"\",\n"
+				+ "\"token\": \""+ token +"\",\n"
+				+ "\"recipient_role_name\": \"TODOS\",\n"
+				+ "\"recipients\": "
+				+ "		{\n "
+				+ "		\"app_usernames\":"+ receptientsIds + "\n"
+				+ "},\n"
+				+ "\"message\": {\n "
+				+ "		\"title\": \""+ subjectEscapat + "\",\n "
+				+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+				+ "}\n"
+				+ "}";
+		
+		M_log.debug ("JSON:" + JSON_STRING);
+		
+		StringEntity requestEntity = new StringEntity(
+			    JSON_STRING);
+		
+		HttpPost postMessage = new HttpPost(urlMessagesAppMobilServer);
+		postMessage.setEntity(requestEntity);
+		postMessage.setHeader("Accept", "application/json");
+	    postMessage.setHeader("Content-type", "application/json");
+		
+		
+		try {
+			if (httpclient != null) {
+				//Fem la primera petició, si la llista d'usuaris està bé farà el missatge i tot anirà perfecte
+				HttpResponse response = httpclient.execute(postMessage); 
+				int postResponseCode = response.getStatusLine().getStatusCode();
+				
+				M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode + "Reason " + response.getStatusLine().getReasonPhrase());
+				//M_log.debug("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
+				 if (postResponseCode != 200) {
+					   M_log.debug("EnviaNotifAppMobil: Server CRUE response is not OK, prove");
+					   //Tractarem la llista d'usuaris de nou
+					   if (postResponseCode == 406){
+						   HttpEntity entity = response.getEntity();
+	                       
+						   String message = entity != null ? EntityUtils.toString(entity) : null;
+
+						   //Extraurem la llista de noms del string
+						   if (message.contains ("app_usernames")) {
+							   String [] split1 = message.split ("app_usernames\\Q\\\":[\\E");
+							   String [] split2 = split1[1].split ("\\Q]\\E");
+							    
+							   if (split2[0] != null && split2[0].startsWith("\\\"")) {
+
+								   String nameArrayString = split2[0].replace("\\","");
+								   //Un cop ja tenim el string amb la llista de noms l'hem de partir i eliminar-los del receptientsIds
+								   String [] nameArray = nameArrayString.split (",");
+								   
+								   String newReceptientsIds = receptientsIds;
+								   for (String a : nameArray) {
+									   //Primer busquem si existeix amb "loquesigui",
+									   newReceptientsIds = newReceptientsIds.replace (a + ",","");
+									   //Si no existeix potser es que es l'ultim i ho busquem sense ,
+									   newReceptientsIds = newReceptientsIds.replace (a,"");
+								   }
+								   
+								   //En cas de borra l'ultim també la treurem
+								   newReceptientsIds = newReceptientsIds.replace (",]","]");
+								   
+								   //Provarem de nou a enviar una petició d'enviament
+								   JSON_STRING= "{\n"
+											+ "\"import_code\" : \""+ importCode +"\",\n"
+											+ "\"token\": \""+ token +"\",\n"
+											+ "\"recipient_role_name\": \"TODOS\",\n"
+											+ "\"recipients\": "
+											+ "		{\n "
+											+ "		\"app_usernames\":"+ newReceptientsIds + "\n"
+											+ "},\n"
+											+ "\"message\": {\n "
+											+ "		\"title\": \""+ subjectEscapat + "\",\n "
+											+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+											+ "}\n"
+											+ "}";
+								   
+								   StringEntity requestEntity2 = new StringEntity(
+										    JSON_STRING);
+									
+									HttpPost postMessage2 = new HttpPost(urlMessagesAppMobilServer);
+									postMessage2.setEntity(requestEntity2);
+									postMessage2.setHeader("Accept", "application/json");
+								    postMessage2.setHeader("Content-type", "application/json");
+								    
+								    HttpResponse response2 = httpclient.execute(postMessage2); 
+									int postResponseCode2 = response2.getStatusLine().getStatusCode();
+									if (postResponseCode2 != 200) {
+										M_log.debug("EnviaNotifAppMobil: ServerUdL response is not OK");
+										M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode2 + "Reason " + response2.getStatusLine().getReasonPhrase());
+									}
+									else {
+										M_log.debug ("EnviaNotifAppMobil: Enviat ok");
+										retorn = true;
+									}
+							   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
+								   retorn = true;
+							   }
+						   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
+							   retorn = true;
+						   }
+					   }
+				 }
+				 else {
+				   retorn = true;
+				 }
+			}
+			else {
+				M_log.debug("EnviaNotifAppMobil: httpclient is null");
+			}
+			
+        }catch (Exception ex){
+        	ex.printStackTrace();
+        }
+       finally {
+    	   httpclient.close();
+        } 
+	   return retorn;
+    }
+	
+	
+private boolean sendCRUECategory  (String subject, String author, String content, String siteId, String siteTitle, String notificationUrl, String categoryId) throws Exception {
+		
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		
+		boolean retorn = false;
+		String subjectEscapat = StringEscapeUtils.escapeJson(subject);
+		String authorEscapat = StringEscapeUtils.escapeJson(author);
+		String bodyEscapat = StringEscapeUtils.escapeJson(convertFormattedHtmlTextToPlaintext(content));
+		String urlMessagesAppMobilServer = instanciaServerConfigurationService.getString("appMobil.AppCRUE.urlMessages"); 
+		String importCode = instanciaServerConfigurationService.getString("appMobil.AppCRUE.importCode");
+		String token = instanciaServerConfigurationService.getString("appMobil.AppCRUE.token");
+	
+		if ("udlinfo".equals(categoryId)) {
+		
+			String JSON_STRING= "{\n"
+					+ "\"import_code\" : \""+ importCode +"\",\n"
+					+ "\"token\": \""+ token +"\",\n"
+					+ "\"recipient_role_name\": \"TODOS\",\n"
+					+ "\"recipients\": "
+					+ "		{\n "
+					+ "		\"university_codes\":[\"udl\"]\n"
+					+ "},\n"
+					+ "\"message\": {\n "
+					+ "		\"title\": \""+ subjectEscapat + "\",\n "
+					+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + siteTitle + "\"\n"
+					+ "}\n"
+					+ "}";
+			
+			StringEntity requestEntity = new StringEntity(
+				    JSON_STRING);
+			
+			HttpPost postMessage = new HttpPost(urlMessagesAppMobilServer);
+			postMessage.setEntity(requestEntity);
+			postMessage.setHeader("Accept", "application/json");
+		    postMessage.setHeader("Content-type", "application/json");
+			
+			
+			try {
+				if (httpclient != null) {
+					//Fem la primera petició, si la llista d'usuaris està bé farà el missatge i tot anirà perfecte
+					HttpResponse response = httpclient.execute(postMessage); 
+					int postResponseCode = response.getStatusLine().getStatusCode();
+					
+					M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode + "Reason " + response.getStatusLine().getReasonPhrase());
+					//M_log.debug("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
+					 if (postResponseCode != 200) {
+						   M_log.debug("EnviaNotifAppMobil: Server CRUE response is not OK, prove");
+					 }
+					 else {
+					   retorn = true;
+					 }
 				}
 				else {
 					M_log.debug("EnviaNotifAppMobil: httpclient is null");
@@ -467,9 +741,34 @@ public class EnviaNotificacionsAppMobil implements Job {
 	        }catch (Exception ex){
 	        	ex.printStackTrace();
 	        }
-           finally {
-        	   postMessage.releaseConnection();
+	       finally {
+	    	   httpclient.close();
 	        } 
-		   return retorn;
-	    }
+		}else {
+			//No es un codi vàlid i per tant el donem com enviat pero descartem
+			M_log.debug ("EnviaNotifAppMobil: Descartem missatge, s'envia des d'un categoryid no autoritzat");
+			retorn = true;
+		}
+	   return retorn;
+    }
+
+	private String convertFormattedHtmlTextToPlaintext(String htmlText) {
+		/*
+		 * replace "<p>" with nothing. Replace "</p>" and "<p />" HTML
+		 * tags with "<br />"
+		 */
+		if (htmlText == null)
+			return "";
+
+		htmlText = htmlText.replaceAll("<p>", "");
+		htmlText = htmlText.replaceAll("</p>", "###invent###");
+		htmlText = htmlText.replaceAll("<p />", "###invent###");
+		htmlText = htmlText.replaceAll("<br />", "###invent###");
+		htmlText = htmlText.replaceAll("<br >", "###invent###");
+		htmlText = htmlText.replaceAll("<br>", "###invent###");
+		htmlText = FormattedText.convertFormattedTextToPlaintext(htmlText);
+		htmlText = htmlText.replaceAll ("###invent###","\n");
+		return htmlText;
+	}
+	
 }

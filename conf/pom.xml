@@ -599,6 +599,29 @@
 											<value>${appserver.urlmessages}</value>
 										</replacement>
 										<replacement>
+											<token>TOKEN-APPSERVER-HOST</token>
+											<value>${appserver.host}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-APPSERVER-PORT</token>
+											<value>${appserver.port}</value>
+										</replacement>
+
+										<replacement>
+											<token>TOKEN-APPCRUESERVER-MESSAGES</token>
+											<value>${appcrueserver.urlmessages}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-APPCRUESERVER-IMPORTCODE</token>
+											<value>${appcrueserver.importcode}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-APPCRUESERVER-TOKEN</token>
+											<value>${appcrueserver.token}</value>
+										</replacement>
+										
+										
+										<replacement>
 											<token>TOKEN-DIR-LDAPSERVERRW</token>
 											<value>${dir.ldapserverrw}</value>
 										</replacement>
