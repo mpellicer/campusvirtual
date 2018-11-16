@@ -130,7 +130,7 @@ Dropzone.options.fileUploader = {
     addRemoveLinks: true,
     editFileName: true,
     editIconClass: "fa fa-edit",
-    dictEditIcon: "$tlang.getString("dragndrop.dictEditIcon")",
+    dictEditText: "$tlang.getString("dragndrop.dictEditText")",
     dictFilenameMaxLength: "245",
     dictChangeFilenameMessage: "$tlang.getString("dragndrop.dictChangeFilenameMessage")",
     maxFilesize: $uploadMaxSize, // MB
@@ -181,9 +181,9 @@ Dropzone.options.fileUploader = {
 
         this.on("sending", function(file, xhr, formData) {
 
-	    var nomFitxer = file.name;
-	    var proves = document.getElementById(nomFitxer).name;
-            file.upload.filename = proves; 
+	    var oldFileName = file.name;
+	    var newName = document.getElementById(oldFileName).name;
+        file.upload.filename = newName; 
 
 	    formData.append("fullPath",file.fullPath);
             #if($model.isDropbox() || $model.isUserSite() || !$availability_is_enabled)
