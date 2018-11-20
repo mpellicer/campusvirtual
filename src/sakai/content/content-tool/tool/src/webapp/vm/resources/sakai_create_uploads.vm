@@ -129,7 +129,7 @@ Dropzone.options.fileUploader = {
     uploadMultiple: false,
     addRemoveLinks: true,
     editFileName: true,
-    editIconClass: "fa fa-edit",
+    editHtmlElement: "<i id=\"editFileName\" class=\"fa fa-edit\"></i>",
     dictEditText: "$tlang.getString("dragndrop.dictEditText")",
     dictFilenameMaxLength: "245",
     dictChangeFilenameMessage: "$tlang.getString("dragndrop.dictChangeFilenameMessage")",
