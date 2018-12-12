@@ -1445,6 +1445,27 @@ GradebookSpreadsheet.prototype.setupMenusAndPopovers = function() {
   self.$spreadsheet.find('.dropdown-toggle').dropdown();
 };
 
+function createNewGradebookItemPopover(){
+    var $newPopoverColumn = $('.gb-just-created');
+    var assignmentid = parseInt($newPopoverColumn.attr('data-assignmentid'));
+    var $newPopover = $('[data-assignmentid='+assignmentid+']').not('div').first();
+    
+    $newPopover.attr('data-toggle', 'popover');
+    $newPopover.attr('data-placement', 'top');
+    $newPopover.attr('data-container', 'body');
+    $newPopover.attr('data-title', $('#labelNewGradeItemPopoverTitle').text());
+    $newPopover.attr('data-content', $('#labelNewGradeItemPopoverMessage').text());
+    
+    $newPopover.popover();
+    $newPopover.popover('show'); 
+    $('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'popover'
+            && $(e.target).parents('.popover.in').length === 0) { 
+            $newPopover.popover('destroy');
+            $newPopover.attr('data-toggle','');
+        }
+    });
+}
 
 GradebookSpreadsheet.prototype.enablePopovers = function($target) {
   var self = this;
@@ -1477,6 +1498,7 @@ GradebookSpreadsheet.prototype.enablePopovers = function($target) {
       $popover.popover("hide");
     }
   });
+  createNewGradebookItemPopover();
 };
 
 
