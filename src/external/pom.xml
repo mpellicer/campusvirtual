@@ -8,7 +8,7 @@
         <version>11.3</version>
     </parent>
     
-    <name>Udl Tools deployer</name>
+    <name>External Contrib Tools deployer</name>
     <groupId>cat.udl.asic</groupId>
     <artifactId>external-base</artifactId>
     <packaging>pom</packaging>
@@ -17,7 +17,7 @@
 		<!--  <module>bbb-tool</module> -->
 		<module>umusync</module>
 		<module>urkund-antiplagiarism/contentreview-impl</module>
-		<module>attendance</module>
+		<module>copyright-checker</module>
 	</modules>    
     
 </project>
