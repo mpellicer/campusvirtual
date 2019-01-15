@@ -178,7 +178,7 @@ public class AttendanceDaoImpl extends HibernateDaoSupport implements Attendance
 		}
 
 		try {
-			getHibernateTemplate().delete(getHibernateTemplate().merge(aE));
+			getHibernateTemplate().delete(aE);
 			return true;
 		} catch (DataAccessException e) {
 			log.error("deleteAttendanceEvent, " + aE.getId() + ", failed.", e);
