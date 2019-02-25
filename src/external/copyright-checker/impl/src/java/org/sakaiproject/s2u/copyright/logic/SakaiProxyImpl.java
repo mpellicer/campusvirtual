@@ -511,7 +511,7 @@ public class SakaiProxyImpl implements SakaiProxy {
         User user = userDirectoryService.getUserByEid(userEid);
 
         //File URL should be something like http://localhost/access/content/group/xxxxxx
-        String fileUrl = serverConfigurationService.getServerUrl() + this.getFileUrl(fileId);
+        String fileUrl = this.getFileUrl(fileId);
 
         //Title of the notification
         ResourceLoader resourceLoader = new ResourceLoader("messages");
