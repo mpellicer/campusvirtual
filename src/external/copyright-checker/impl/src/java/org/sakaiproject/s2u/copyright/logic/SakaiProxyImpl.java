@@ -329,7 +329,7 @@ public class SakaiProxyImpl implements SakaiProxy {
             for (SitePage sitePage : workspaceSite.getPages()) {
                 for(ToolConfiguration toolConfiguration : sitePage.getTools()){
                     if (toolConfiguration.getToolId().equals(toolId)) {
-                        workspaceToolUrl = String.format("%s/site/copyright-checker/tool/%s", serverConfigurationService.getPortalUrl(), userSiteId, toolConfiguration.getId());
+                        workspaceToolUrl = String.format("%s/site/%s/tool/%s", serverConfigurationService.getPortalUrl(), userSiteId, toolConfiguration.getId());
                     }
                 }
             }
