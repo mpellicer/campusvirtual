@@ -878,6 +878,7 @@ public class AssignmentAction extends PagedResourceActionII
 	private static final String SAVED_FEEDBACK = "feedback_saved";
 	
 	private static final int INPUT_BUFFER_SIZE = 102400;
+	private static final long MEGABYTE = 1024L * 1024L;
 	
 	private static final String INVOKE = "invoke_via";
 	private static final String INVOKE_BY_LINK = "link";
@@ -937,6 +938,9 @@ public class AssignmentAction extends PagedResourceActionII
 	private static final String CONTEXT_GO_NEXT_UNGRADED_ENABLED = "goNextUngradedEnabled";
 	private static final String CONTEXT_GO_PREV_UNGRADED_ENABLED = "goPrevUngradedEnabled";
 	private static final String PARAMS_VIEW_SUBS_ONLY_CHECKBOX = "chkSubsOnly1";
+
+	// Content providers names
+	private static final String CONTENT_PROVIDER_URKUND = "Urkund";
 	
 	private AssignmentPeerAssessmentService assignmentPeerAssessmentService;
 	public void setAssignmentPeerAssessmentService(AssignmentPeerAssessmentService assignmentPeerAssessmentService){
@@ -1472,6 +1476,15 @@ public class AssignmentAction extends PagedResourceActionII
 				if (!contentReviewService.allowAllContent() && assignmentSubmissionTypeTakesAttachments(assignment))
 				{
 					context.put("plagiarismFileTypes", rb.getFormattedMessage("gen.onlythefoll", getContentReviewAcceptedFileTypesMessage()));
+
+					String reviewServiceName = contentReviewService.getServiceName();
+					switch(reviewServiceName) {
+						case CONTENT_PROVIDER_URKUND:
+							long maxFileSizeBytes = Long.parseLong(ServerConfigurationService.getString("urkund.maxFileSize", "20971520"));
+							context.put("plagiarismFileSize", rb.getFormattedMessage("plagiarismFileSize", new Object[]{maxFileSizeBytes/MEGABYTE}));
+							break;
+						default:
+					}
 
 					// SAK-31649 commenting this out to remove file picker filters, as the results vary depending on OS and browser.
 					// If in the future browser support for the 'accept' attribute on a file picker becomes more robust and 
@@ -2604,7 +2617,18 @@ public class AssignmentAction extends PagedResourceActionII
 		if (!contentReviewService.allowAllContent())
 		{
 			String fileTypesMessage = getContentReviewAcceptedFileTypesMessage();
-			String contentReviewNote = rb.getFormattedMessage("content_review.note", new Object[]{fileTypesMessage});
+			String reviewServiceName = contentReviewService.getServiceName();
+			Object[] params = new Object[2];
+			params[0] = fileTypesMessage;
+			params[1] = "";
+			switch(reviewServiceName) {
+				case CONTENT_PROVIDER_URKUND:
+					long maxFileSizeBytes = Long.parseLong(ServerConfigurationService.getString("urkund.maxFileSize", "20971520"));
+					params[1] = rb.getFormattedMessage("plagiarismFileSize", new Object[]{maxFileSizeBytes/MEGABYTE});
+					break;
+				default:
+			}
+			String contentReviewNote = rb.getFormattedMessage("content_review.note", params);
 			context.put("content_review_note", contentReviewNote);
 		}
 		context.put("turnitin_forceSingleAttachment", ServerConfigurationService.getBoolean("turnitin.forceSingleAttachment", false));
