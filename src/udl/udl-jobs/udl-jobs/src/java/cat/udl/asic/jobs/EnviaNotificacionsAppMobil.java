@@ -604,61 +604,66 @@ public class EnviaNotificacionsAppMobil implements Job {
 						   //Extraurem la llista de noms del string
 						   if (message.contains ("app_usernames")) {
 							   String [] split1 = message.split ("app_usernames\\Q\\\":[\\E");
-							   String [] split2 = split1[1].split ("\\Q]\\E");
-							    
-							   if (split2[0] != null && split2[0].startsWith("\\\"")) {
-
-								   String nameArrayString = split2[0].replace("\\","");
-								   //Un cop ja tenim el string amb la llista de noms l'hem de partir i eliminar-los del receptientsIds
-								   String [] nameArray = nameArrayString.split (",");
-								   
-								   String newReceptientsIds = receptientsIds;
-								   for (String a : nameArray) {
-									   //Primer busquem si existeix amb "loquesigui",
-									   newReceptientsIds = newReceptientsIds.replace (a + ",","");
-									   //Si no existeix potser es que es l'ultim i ho busquem sense ,
-									   newReceptientsIds = newReceptientsIds.replace (a,"");
-								   }
-								   
-								   //En cas de borra l'ultim també la treurem
-								   newReceptientsIds = newReceptientsIds.replace (",]","]");
-								   
-								   //Provarem de nou a enviar una petició d'enviament
-								   JSON_STRING= "{\n"
-											+ "\"import_code\" : \""+ importCode +"\",\n"
-											+ "\"token\": \""+ token +"\",\n"
-											+ "\"recipient_role_name\": \"TODOS\",\n"
-											+ "\"recipients\": "
-											+ "		{\n "
-											+ "		\"app_usernames\":"+ newReceptientsIds + "\n"
-											+ "},\n"
-											+ "\"message\": {\n "
-											+ "		\"title\": \""+ subjectEscapat + "\",\n "
-											+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + StringEscapeUtils.escapeJson(siteTitle) + "\"\n"
-											+ "}\n"
-											+ "}";
-								   
-								   StringEntity requestEntity2 = new StringEntity(
-										    JSON_STRING);
-									
-									HttpPost postMessage2 = new HttpPost(urlMessagesAppMobilServer);
-									postMessage2.setEntity(requestEntity2);
-									postMessage2.setHeader("Accept", "application/json");
-								    postMessage2.setHeader("Content-type", "application/json");
+							   if (split1.length > 1) {
+								   String [] split2 = split1[1].split ("\\Q]\\E");
 								    
-								    HttpResponse response2 = httpclient.execute(postMessage2); 
-									int postResponseCode2 = response2.getStatusLine().getStatusCode();
-									if (postResponseCode2 != 200) {
-										M_log.debug("EnviaNotifAppMobil: ServerUdL response is not OK");
-										M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode2 + "Reason " + response2.getStatusLine().getReasonPhrase());
-									}
-									else {
-										M_log.debug ("EnviaNotifAppMobil: Enviat ok");
-										retorn = true;
-									}
-							   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
-								   retorn = true;
+								   if (split2[0] != null && split2[0].startsWith("\\\"")) {
+
+									   String nameArrayString = split2[0].replace("\\","");
+									   //Un cop ja tenim el string amb la llista de noms l'hem de partir i eliminar-los del receptientsIds
+									   String [] nameArray = nameArrayString.split (",");
+									   
+									   String newReceptientsIds = receptientsIds;
+									   for (String a : nameArray) {
+										   //Primer busquem si existeix amb "loquesigui",
+										   newReceptientsIds = newReceptientsIds.replace (a + ",","");
+										   //Si no existeix potser es que es l'ultim i ho busquem sense ,
+										   newReceptientsIds = newReceptientsIds.replace (a,"");
+									   }
+									   
+									   //En cas de borra l'ultim també la treurem
+									   newReceptientsIds = newReceptientsIds.replace (",]","]");
+									   
+									   //Provarem de nou a enviar una petició d'enviament
+									   JSON_STRING= "{\n"
+												+ "\"import_code\" : \""+ importCode +"\",\n"
+												+ "\"token\": \""+ token +"\",\n"
+												+ "\"recipient_role_name\": \"TODOS\",\n"
+												+ "\"recipients\": "
+												+ "		{\n "
+												+ "		\"app_usernames\":"+ newReceptientsIds + "\n"
+												+ "},\n"
+												+ "\"message\": {\n "
+												+ "		\"title\": \""+ subjectEscapat + "\",\n "
+												+ "		\"body\": \"" + bodyEscapat +"\\n\\n Missatge enviat des de l'espai del CV: " + StringEscapeUtils.escapeJson(siteTitle) + "\"\n"
+												+ "}\n"
+												+ "}";
+									   
+									   StringEntity requestEntity2 = new StringEntity(
+											    JSON_STRING);
+										
+										HttpPost postMessage2 = new HttpPost(urlMessagesAppMobilServer);
+										postMessage2.setEntity(requestEntity2);
+										postMessage2.setHeader("Accept", "application/json");
+									    postMessage2.setHeader("Content-type", "application/json");
+									    
+									    HttpResponse response2 = httpclient.execute(postMessage2); 
+										int postResponseCode2 = response2.getStatusLine().getStatusCode();
+										if (postResponseCode2 != 200) {
+											M_log.debug("EnviaNotifAppMobil: ServerUdL response is not OK");
+											M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode2 + "Reason " + response2.getStatusLine().getReasonPhrase());
+										}
+										else {
+											M_log.debug ("EnviaNotifAppMobil: Enviat ok");
+											retorn = true;
+										}
+								   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
+									   retorn = true;
+								   }
 							   }
+							   else  { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
+								   retorn = true;   
+							   }   
 						   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
 							   retorn = true;
 						   }
