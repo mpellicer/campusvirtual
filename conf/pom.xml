@@ -681,7 +681,22 @@
 											<token>TOKEN-URKUND-PASSWORD</token>
 											<value>${urkund.password}</value>
 										</replacement>
-										
+										<replacement>
+											<token>TOKEN-KALTURA-LAUNCH-KEY</token>
+											<value>${kaltura.launk.key}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-LAUNCH-SECRET</token>
+											<value>${kaltura.launch.secret}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-HOST</token>
+											<value>${kaltura.host}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-CKEDITOURL</token>
+											<value>${kaltura.ckeditor.url}</value>
+										</replacement>
 									</replacements>
 								</configuration>
 							</execution>
