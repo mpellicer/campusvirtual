@@ -17,7 +17,8 @@
 		<!--  <module>bbb-tool</module> -->
 		<module>umusync</module>
 		<module>urkund-antiplagiarism/contentreview-impl</module>
-	</modules>    
+		<module>kaltura-sakai-extension</module>
+	</modules>
     
 </project>
 
