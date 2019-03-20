@@ -709,8 +709,7 @@
                                                                                         <token>TOKEN-SITESTATS-URL</token>
                                                                                         <value>${sitestats.externaldb.url}</value>
                                                                                 </replacement>
-										
-									</replacements>
+								</replacements>
 								</configuration>
 							</execution>
 							<execution>
