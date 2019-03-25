@@ -591,7 +591,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 				HttpResponse response = httpclient.execute(postMessage); 
 				int postResponseCode = response.getStatusLine().getStatusCode();
 				
-				M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode + "Reason " + response.getStatusLine().getReasonPhrase());
+				M_log.debug("EnviaNotifAppMobil: Server CRUE response is " + postResponseCode + " Reason " + response.getStatusLine().getReasonPhrase());
 				//M_log.debug("EnviaNotifAppMobil Server response post: "+postMessage.getResponseBodyAsString());	
 				 if (postResponseCode != 200) {
 					   M_log.debug("EnviaNotifAppMobil: Server CRUE response is not OK, prove");
@@ -667,6 +667,13 @@ public class EnviaNotificacionsAppMobil implements Job {
 						   } else { // No hi ha usuaris descartats per tant no hem de fer res més. Donem-lo com enviat. 
 							   retorn = true;
 						   }
+					   }
+					   else {
+						   M_log.debug ("EnviaNotifAppMobil: Codi resposta "+postResponseCode);
+						   HttpEntity entity2 = response.getEntity();
+	                       String message2 = entity2 != null ? EntityUtils.toString(entity2) : null;
+	                       M_log.debug ("EnviaNotifAppMobil: Resposta servidor "+message2);
+	                       retorn = true;
 					   }
 				 }
 				 else {
