@@ -672,7 +672,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 						   M_log.debug ("EnviaNotifAppMobil: Codi resposta "+postResponseCode);
 						   HttpEntity entity2 = response.getEntity();
 	                       String message2 = entity2 != null ? EntityUtils.toString(entity2) : null;
-	                       M_log.debug ("EnviaNotifAppMobil: Resposta servidor "+messsage2);
+	                       M_log.debug ("EnviaNotifAppMobil: Resposta servidor "+message2);
 	                       retorn = true;
 					   }
 				 }
