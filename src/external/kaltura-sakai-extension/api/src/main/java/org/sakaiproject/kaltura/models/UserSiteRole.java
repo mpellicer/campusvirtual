@@ -3,32 +3,34 @@
  */
 package org.sakaiproject.kaltura.models;
 
-import org.sakaiproject.kaltura.util.JsonUtil;
+import org.sakaiproject.kaltura.utils.JsonUtil;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-@Data
-@NoArgsConstructor
 public class UserSiteRole {
 
     /**
      * The ID of the site
      */
-    @JsonProperty("context_id")
+    @Expose
+    @SerializedName("context_id")
     private String contextId;
 
     /**
      * The title of the site
      */
-    @JsonProperty("context_title")
+    @Expose
+    @SerializedName("context_title")
     private String contextTitle;
 
     /**
      * A comma-separated string with the LTI roles
      */
+    @Expose
     private String ltiRoles;
+
+    public UserSiteRole(){}
 
     public UserSiteRole(String contextId) {
         this(contextId, null);
@@ -36,6 +38,30 @@ public class UserSiteRole {
 
     public UserSiteRole(String contextId, String ltiRoles) {
         this.contextId = contextId;
+        this.ltiRoles = ltiRoles;
+    }
+
+    public String getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(String contextId) {
+        this.contextId = contextId;
+    }
+
+    public String getContextTitle() {
+        return contextTitle;
+    }
+
+    public void setContextTitle(String contextTitle) {
+        this.contextTitle = contextTitle;
+    }
+
+    public String getLtiRoles() {
+        return ltiRoles;
+    }
+
+    public void setLtiRoles(String ltiRoles) {
         this.ltiRoles = ltiRoles;
     }
 

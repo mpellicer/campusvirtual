@@ -7,29 +7,32 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import org.sakaiproject.kaltura.util.AuthCodeUtil;
+import org.sakaiproject.kaltura.utils.AuthCodeUtil;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.google.gson.annotations.Expose;
 
 /**
  * This is a Kaltura LTI RESTful API authorization, it represents an authorization code object from the database
  * 
  * @author Robert Long (rlong @ unicon.net)
  */
-@Data
-@EqualsAndHashCode(of = "id")
-@NoArgsConstructor
 public class KalturaLtiAuthCode implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Expose
     private Long id;
+    @Expose
     private String userId;
+    @Expose
     private String authCode;
+    @Expose
     private Date dateCreated;
+    @Expose
     private Date dateExpires;
+
+    public KalturaLtiAuthCode() {
+    }
 
     public KalturaLtiAuthCode(String userId, String authCode) {
         this(userId, authCode, new Date(), AuthCodeUtil.calculateExpirationDate(new Date()));
@@ -84,6 +87,41 @@ public class KalturaLtiAuthCode implements Serializable {
         } else {
             this.dateExpires = dateExpires;
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getAuthCode() {
+        return authCode;
+    }
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateExpires() {
+        return dateExpires;
+    }
+    public void setDateExpires(Date dateExpires) {
+        this.dateExpires = dateExpires;
     }
 
     public boolean isExpired() {

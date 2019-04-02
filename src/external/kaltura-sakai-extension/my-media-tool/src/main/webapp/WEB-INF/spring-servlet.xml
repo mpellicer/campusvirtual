@@ -30,4 +30,6 @@ Copyright ©2016 Kaltura, Inc.
         <property name="order" value="10" />
     </bean>
 
+    <import resource="classpath*:kaltura-services-context.xml" />
+
 </beans>
