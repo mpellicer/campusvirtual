@@ -12,41 +12,32 @@
   <artifactId>kaltura-api</artifactId>
   <packaging>jar</packaging>
 
-  <properties>
-    <deploy.target>shared</deploy.target>
-  </properties>
-
   <dependencies>
+    <dependency>
+      <groupId>org.sakaiproject.kaltura</groupId>
+      <artifactId>kaltura-utils</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.sakaiproject.kernel</groupId>
       <artifactId>sakai-kernel-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-component-manager</artifactId>
+      <groupId>org.sakaiproject.genericdao</groupId>
+      <artifactId>generic-dao</artifactId>
+      <version>${sakai.genericdao.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
+      <groupId>${sakai.hibernate.groupId}</groupId>
+      <artifactId>${sakai.hibernate.artifactId}</artifactId>
     </dependency>
   </dependencies>
 
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
-
   </build>
 
 </project>
