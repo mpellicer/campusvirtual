@@ -238,8 +238,14 @@ public class EnviaNotificacionsAppMobil implements Job {
 						if (published) {
 							// recuperem el cos del missatge
 							String body = msg.getBody();
-							// recuperem l'assumpte del missatge
+							// recuperem l'assumpte del missatge, no pot tenir més de 80 caràcters (CVON-132)
+							int subjectMaxLength = 80;
 							String subject = msgHeader.getSubject();
+							if (subject.length() > subjectMaxLength) {
+							      subject = subject.substring(0, 70);
+							      subject = subject.concat("...");
+							   }
+							M_log.debug ("EnviaNotifAppMobil: Subject " + subject);
 							// informació de l'autor del missatge
 							User author = msgHeader.getFrom();
 							String authorDisplayId = author.getDisplayId();
@@ -673,7 +679,7 @@ public class EnviaNotificacionsAppMobil implements Job {
 						   HttpEntity entity2 = response.getEntity();
 	                       String message2 = entity2 != null ? EntityUtils.toString(entity2) : null;
 	                       M_log.debug ("EnviaNotifAppMobil: Resposta servidor "+message2);
-	                       //retorn = true;
+	                       // no fem retorn = true; perquè quedi a la taula entity_push i poder veure quin error dona el servidor
 					   }
 				 }
 				 else {
