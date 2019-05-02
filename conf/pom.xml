@@ -681,6 +681,34 @@
 											<token>TOKEN-URKUND-PASSWORD</token>
 											<value>${urkund.password}</value>
 										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-LAUNCH-KEY</token>
+											<value>${kaltura.launch.key}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-LAUNCH-SECRET</token>
+											<value>${kaltura.launch.secret}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-HOST</token>
+											<value>${kaltura.host}</value>
+										</replacement>
+										<replacement>
+											<token>TOKEN-KALTURA-CKEDITORURL</token>
+											<value>${kaltura.ckeditor.url}</value>
+										</replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-USERNAME</token>
+                                                                                        <value>${sitestats.externaldb.username}</value>
+                                                                                </replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-PASSWORD</token>
+                                                                                        <value>${sitestats.externaldb.password}</value>
+                                                                                </replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-URL</token>
+                                                                                        <value>${sitestats.externaldb.url}</value>
+                                                                                </replacement>
 										
 									</replacements>
 								</configuration>
