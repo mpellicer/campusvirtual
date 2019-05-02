@@ -697,6 +697,19 @@
 											<token>TOKEN-KALTURA-CKEDITORURL</token>
 											<value>${kaltura.ckeditor.url}</value>
 										</replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-USERNAME</token>
+                                                                                        <value>${sitestats.externaldb.username}</value>
+                                                                                </replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-PASSWORD</token>
+                                                                                        <value>${sitestats.externaldb.password}</value>
+                                                                                </replacement>
+                                                                                <replacement>
+                                                                                        <token>TOKEN-SITESTATS-URL</token>
+                                                                                        <value>${sitestats.externaldb.url}</value>
+                                                                                </replacement>
+										
 									</replacements>
 								</configuration>
 							</execution>
