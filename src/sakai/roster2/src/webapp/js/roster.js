@@ -850,17 +850,19 @@
     };
 
     // jquery.i18n
-    $.i18n.properties({
-        name:'ui',
-        path:'/sakai-roster2-tool/i18n/',
-        mode: 'both',
-        async: true,
-        checkAvailableLanguages: true,
-        language: roster.language,
-        callback: function () {
-            roster.loadSiteDataAndInit();
-        }
-    });
+	  $(document).ready(function () {
+		$.i18n.properties({
+		        name:'ui',
+        		path:'/sakai-roster2-tool/i18n/',
+        		mode: 'both',
+        		async: true,
+        		checkAvailableLanguages: true,
+        		language: roster.language,
+        		callback: function () {
+            			roster.loadSiteDataAndInit();
+        		}
+    		});
+	  });
 
     roster.alignMobileLabels = function () {
 
