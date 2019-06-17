@@ -28,6 +28,7 @@
                     <ul>
                         <li>${rloader.legal_notice}</li>
                         <li>${rloader.materials_publishment_protocol}</li>
+                        <li>${rloader.photo_publishment_rgpd}</li>
                     </ul>
                 </div>
             </div>
