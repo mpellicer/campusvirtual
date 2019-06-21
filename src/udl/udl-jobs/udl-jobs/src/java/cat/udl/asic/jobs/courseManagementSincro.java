@@ -48,6 +48,7 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 
 /* this is a test Quartz job to show that we can inject jobs into the jobscheduler from an external location */
@@ -62,11 +63,29 @@ public class courseManagementSincro implements Job {
 					+ " WHERE ANYACA = ? "
 					+ " AND ESTAT = 0 " ; 
 	
+	static String  sqlSelectGrupsNous = "SELECT CODI_ASS, CODI_GRUP FROM UDL_CM_ESTATS_GRUPS_NOUS "
+			+ " WHERE ANYACA = ? "
+			+ " AND ESTAT = 0 " ; 
+	
+	static String  sqlSelectDoctoratNous = "SELECT CODI_ASS, CODI_GRUP FROM UDL_CM_ESTATS_GRUPS_DOT "
+			+ " WHERE ANYACA = ? "
+			+ " AND ESTAT = 0 " ; 
+	
 
 	static String  sqlUpdateEstat = "UPDATE UDL_CM_ESTATS_ASSIGNATURA "
 					+ " SET ESTAT = 1, DATA_CREACIO_SITE = ?	"
 					+ " WHERE ANYACA = ? "
 					+ " AND CODI_ASS= ? ";
+	
+	static String  sqlUpdateEstatGrup = "UPDATE UDL_CM_ESTATS_GRUPS_NOUS "
+			+ " SET ESTAT = 1, DATA_INS_SAKAI = ?	"
+			+ " WHERE ANYACA = ? "
+			+ " AND CODI_GRUP= ? ";
+	
+	static String  sqlUpdateEstatDoctorat = "UPDATE UDL_CM_ESTATS_GRUPS_DOT "
+			+ " SET ESTAT = 1, DATA_INS_SAKAI = ?	"
+			+ " WHERE ANYACA = ? "
+			+ " AND CODI_GRUP= ? ";
 	
 	private int iSiteTitleMaxLength = 80;
 
@@ -141,10 +160,12 @@ public class courseManagementSincro implements Job {
 		
 		log.info("Executant la tasca de creació de sites usant CM");
 		Connection sakaiConnection = null;
-		PreparedStatement sakaiStatement = null;		
+		PreparedStatement sakaiStatement = null;
+		PreparedStatement sakaiStatementGrups = null;
+		PreparedStatement sakaiStatementDot = null;
 		
         try {
-        		String eidCourseOffering = "";        		
+        		String eidCourseOffering = "";  
         		// recuperem l'any acadèmic
         		List anysAcademics = instanciaCourseManagementService.getCurrentAcademicSessions();
         		Iterator iterAnyAcad = anysAcademics.iterator();
@@ -256,6 +277,131 @@ public class courseManagementSincro implements Job {
 	            			}	
 	            		}		
 	    	  	}
+        		
+        		sakaiStatementGrups = sakaiConnection.prepareStatement(sqlSelectGrupsNous);
+        		sakaiStatementGrups.setString(1, term);
+        		String eidCourseOfferingGrups = "";
+        		String eidGrupAfegit = "";
+        		        	        	
+        		log.debug("Executem la consulta per recuperar els grups nous que tenen estat 0");
+        		ResultSet rstGrups = sakaiStatementGrups.executeQuery();  
+        		
+        		while (rstGrups.next()) {
+    	  			eidCourseOfferingGrups = rstGrups.getString("CODI_ASS");
+    	  			String idSiteGrups = eidCourseOfferingGrups+"-"+any_academic;
+    	  			eidGrupAfegit = rstGrups.getString("CODI_GRUP");
+    	  			log.debug("Afegim als proveïdors de "+idSiteGrups+" el grup "+eidGrupAfegit);
+    	  			Site siteGrups = instanciaSiteService.getSite(idSiteGrups);
+    	  			String siteProviderIdGrups = siteGrups.getProviderGroupId();
+    	  			log.debug("Proveïdor actual "+siteProviderIdGrups);
+    	  			String[] providerIdArrayGrups = instanciaGroupProvider.unpackId(siteProviderIdGrups);
+    	  			List<String> llistaProveidorsGrups = new Vector<String>(Arrays.asList(providerIdArrayGrups));
+    	  			llistaProveidorsGrups.add(eidGrupAfegit);
+    	  			String retornGrups = addSiteProviders(idSiteGrups,llistaProveidorsGrups);
+    	  			if (retornGrups.equals("error"))
+            		{
+            			log.info("Error a l'afegir el grup "+eidGrupAfegit+" a l'espai "+idSiteGrups);
+            		}
+    	  			else if (retornGrups.equals("correcte")) {
+        				log.info("Grup "+eidGrupAfegit+" afegit correctament a "+idSiteGrups);
+        				log.debug("Actualitzem a estat 1 a la taula de CM");
+        				
+        				//Agafem la data actual i la convertim a string	            				
+        				SimpleDateFormat sdf2 = new SimpleDateFormat(DATE_FORMAT);
+        				Date data2 = new Date();
+        				String dataStr2 = sdf2.format(data2);
+        			
+        				try {
+	    	  				// update de l'estat a 1	
+        					PreparedStatement sakaiStatement3 = null;
+        					sakaiStatement3 = sakaiConnection.prepareStatement(sqlUpdateEstatGrup);        		            					
+        					sakaiStatement3.setString(1,dataStr2);
+        					sakaiStatement3.setString(2,term);
+        					sakaiStatement3.setString(3,eidGrupAfegit);   
+        					sakaiStatement3.executeUpdate();    	    	  					            				
+        						    	    	  				
+	    	  				// després de cada actualització fem commit
+	    	  				sakaiConnection.commit();	    	    	  			
+	    	  	            sakaiStatement3.close();
+	    	  	            
+	    	  			}catch (SQLException e) {
+	    	            	log.error("EXCEPCIO (Update UDL_CM_ESTATS_GRUPS_NOUS"+eidCourseOffering+")");
+	    	                log.error("SQLException: " +e);
+	    	            }
+    	  			}
+        		}
+        		
+        		sakaiStatementDot = sakaiConnection.prepareStatement(sqlSelectDoctoratNous);
+        		sakaiStatementDot.setString(1, term);
+        		String eidCourseOfferingDot = "";
+        		String eidGrupDot = "";
+        		
+        		log.debug("Executem la consulta per recuperar els grups de doctorat nous que tenen estat 0");
+        		ResultSet rstDot = sakaiStatementDot.executeQuery();  
+        		
+        		while (rstDot.next()) {
+        			eidCourseOfferingDot = rstDot.getString("CODI_ASS");
+    	  			eidGrupDot = rstDot.getString("CODI_GRUP");
+    	  			log.debug("Afegim als proveïdors de "+eidCourseOfferingDot+" el grup "+eidGrupDot);
+    	  			Site siteDot = instanciaSiteService.getSite(eidCourseOfferingDot);
+    	  			String siteProviderIdDot = siteDot.getProviderGroupId();
+    	  			log.debug("Proveïdor actual "+siteProviderIdDot);
+    	  			String[] providerIdArrayDot = instanciaGroupProvider.unpackId(siteProviderIdDot);
+    	  			List<String> llistaProveidorsDot = new Vector<String>(Arrays.asList(providerIdArrayDot));
+    	  			llistaProveidorsDot.add(eidGrupDot);
+    	  			String retornDot = addSiteProviders(eidCourseOfferingDot,llistaProveidorsDot);
+    	  			if (retornDot.equals("error"))
+            		{
+            			log.info("Error a l'afegir el grup "+eidGrupDot+" a l'espai "+eidCourseOfferingDot);
+            		}
+    	  			else if (retornDot.equals("correcte")) {
+    	  				log.info("Grup "+eidGrupDot+" afegit correctament a "+eidCourseOfferingDot);
+    	  				String idCoordDOT = "coordDOT";
+    	  				log.debug("Afegim als proveïdors de "+idCoordDOT+" el grup "+eidGrupDot);
+    	  				Site coordDOT = instanciaSiteService.getSite(idCoordDOT);
+    	  				String siteProviderCoordDOT = coordDOT.getProviderGroupId();
+        	  			log.debug("Proveïdor actual "+siteProviderCoordDOT);
+        	  			String[] providerIdArrayCoordDOT = instanciaGroupProvider.unpackId(siteProviderCoordDOT);
+        	  			List<String> llistaProveidorsCoordDOT = new Vector<String>(Arrays.asList(providerIdArrayCoordDOT));
+        	  			llistaProveidorsCoordDOT.add(eidGrupDot);
+        	  			String retornCoordDOT = addSiteProviders(idCoordDOT,llistaProveidorsCoordDOT);
+        	  			if (retornCoordDOT.equals("error"))
+                		{
+                			log.info("Error a l'afegir el grup "+eidGrupDot+" a l'espai "+idCoordDOT);
+                		}
+        	  			else if (retornDot.equals("correcte")) {
+        	  				log.info("Grup "+eidGrupDot+" afegit correctament a "+idCoordDOT);
+        	  				log.debug("Actualitzem a estat 1 a la taula de CM");
+            				
+            				//Agafem la data actual i la convertim a string	            				
+            				SimpleDateFormat sdf3 = new SimpleDateFormat(DATE_FORMAT);
+            				Date data3 = new Date();
+            				String dataStr3 = sdf3.format(data3);
+            			
+            				try {
+    	    	  				// update de l'estat a 1	
+            					PreparedStatement sakaiStatement4 = null;
+            					sakaiStatement4 = sakaiConnection.prepareStatement(sqlUpdateEstatDoctorat);        		            					
+            					sakaiStatement4.setString(1,dataStr3);
+            					sakaiStatement4.setString(2,term);
+            					sakaiStatement4.setString(3,eidGrupDot);   
+            					sakaiStatement4.executeUpdate();    	    	  					            				
+            						    	    	  				
+    	    	  				// després de cada actualització fem commit
+    	    	  				sakaiConnection.commit();	    	    	  			
+    	    	  	            sakaiStatement4.close();
+    	    	  	            
+    	    	  			}catch (SQLException e) {
+    	    	            	log.error("EXCEPCIO (Update UDL_CM_ESTATS_GRUPS_DOT "+eidGrupDot+")");
+    	    	                log.error("SQLException: " +e);
+    	    	            }
+        	  			}
+    	  			}
+    	  			
+        		}
+        		
+        		
+        		
 					
         }
         catch (SQLException e) {
@@ -270,6 +416,8 @@ public class courseManagementSincro implements Job {
         finally {
         	try {
                 if(sakaiStatement != null) sakaiStatement.close();
+                if(sakaiStatementGrups != null) sakaiStatementGrups.close();
+                if(sakaiStatementDot != null) sakaiStatementDot.close();
             } catch (SQLException e) {
             	log.error("EXCEPCIO SQL al tancar statement");
                 log.error("SQLException: " +e);

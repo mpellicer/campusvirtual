@@ -64,10 +64,10 @@ public class notificaGrupsNous implements Job {
 
 	// consulta els grups que s'han planificat nous
 	static String  sqlSelectGrupsNous = "select CODI_ASS, NOM_ASS, CODI_GRUP, NOM_GRUP, EMAIL, LOGIN" +
-			" from udl_cm_estats_grups_nous where estat = 0";
+			" from udl_cm_estats_grups_nous where estat = 1";
 	
 	// update de l'estat a 1 (usuari tractat) 	
-	static String  sqlUpdateEstat = "UPDATE UDL_CM_ESTATS_GRUPS_NOUS SET ESTAT = 1, MAIL_SENT=1, DATA_MAIL_NOTIF = ? WHERE CODI_ASS  = ? AND CODI_GRUP = ? AND EMAIL = ? ";
+	static String  sqlUpdateEstat = "UPDATE UDL_CM_ESTATS_GRUPS_NOUS SET ESTAT = 2, MAIL_SENT=1, DATA_MAIL_NOTIF = ? WHERE CODI_ASS  = ? AND CODI_GRUP = ? AND EMAIL = ? ";
 	
 	private static String NOTIFY_NEW_GROUP ="notificacio.nouGrup";
 	private static String FILE_NOTIFY_NEW_GROUP_TEMPLATE = "cat/udl/asic/jobs/templates/notifyNewGroup.xml";
