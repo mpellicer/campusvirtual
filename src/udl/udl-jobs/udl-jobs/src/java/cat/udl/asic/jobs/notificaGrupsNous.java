@@ -62,12 +62,12 @@ public class notificaGrupsNous implements Job {
 	static Logger log = Logger.getLogger(
 			notificaGrupsNous.class.getName());
 
-	// consulta els grups que s'han planificat nous
+	// consulta els grups que s'han planificat nous i que s'han afegit al campus virtual (estat = 1)
 	static String  sqlSelectGrupsNous = "select CODI_ASS, NOM_ASS, CODI_GRUP, NOM_GRUP, EMAIL, LOGIN" +
 			" from udl_cm_estats_grups_nous where estat = 1";
 	
 	// update de l'estat a 1 (usuari tractat) 	
-	static String  sqlUpdateEstat = "UPDATE UDL_CM_ESTATS_GRUPS_NOUS SET ESTAT = 2, MAIL_SENT=1, DATA_MAIL_NOTIF = ? WHERE CODI_ASS  = ? AND CODI_GRUP = ? AND EMAIL = ? ";
+	static String  sqlUpdateEstat = "UPDATE UDL_CM_ESTATS_GRUPS_NOUS SET ESTAT = ?, MAIL_SENT=1, DATA_MAIL_NOTIF = ? WHERE CODI_ASS  = ? AND CODI_GRUP = ?";
 	
 	private static String NOTIFY_NEW_GROUP ="notificacio.nouGrup";
 	private static String FILE_NOTIFY_NEW_GROUP_TEMPLATE = "cat/udl/asic/jobs/templates/notifyNewGroup.xml";
@@ -145,7 +145,7 @@ public class notificaGrupsNous implements Job {
 
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		
-		log.info("Executant la tasca de notifica de nous grups planificats");		
+		log.info("Executant la tasca de notificar grups nous planificats");		
 		Connection sakaiConnection = null;
 		PreparedStatement sakaiStatement = null;
 
@@ -168,6 +168,7 @@ public class notificaGrupsNous implements Job {
         		ResultSet rst = sakaiStatement.executeQuery();
         		while (rst.next()) {
         				PreparedStatement sakaiStatement2 = null;
+        				boolean mailEnviat = false;
 	    	  			
         				codi_ass = rst.getString("CODI_ASS");
         				nom_ass = rst.getString("NOM_ASS");
@@ -180,27 +181,51 @@ public class notificaGrupsNous implements Job {
         				SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         				Date data = new Date();
         				String dataStr = sdf.format(data);
-        				     				
-        				
-        				// enviem mail notificacio         	                		
-	    	  			if(enviaNotificacio(codi_ass, codi_grup, nom_ass, nom_grup, email, login)){	    	  						    	  		
-		    	  			try {		    	  				
-		    	    	  		// update de l'estat a 1 (notificacio enviada) 	//	    	  			
-		    	  				sakaiStatement2 = sakaiConnection.prepareStatement(sqlUpdateEstat);   
-		    	  				sakaiStatement2.setString(1, dataStr);
-		    	  				sakaiStatement2.setString(2, codi_ass);
-		    	  				sakaiStatement2.setString(3, codi_grup);
-		    	  				sakaiStatement2.setString(4, email);
-		    	  				sakaiStatement2.executeUpdate();		    	  				
-		    	    	  		// després de cada actualització fem commit
-		    	    	  		sakaiConnection.commit();
-		    	    	  		sakaiStatement2.close();
-	   	    	  			}catch (SQLException e) {
-	   	    	            	log.error("EXCEPCIO SQL execució update notificacio grup nou ");
-	   	    	                log.error("SQLException: " +e);
-	   	    	            }	
-	    	  			}
-	    	  				   	  			
+        				if (login != null) {
+        					if (!login.isEmpty()) {
+        						if (email != null) {
+        							if (!email.isEmpty()) {
+        								mailEnviat = enviaNotificacio(codi_ass, codi_grup, nom_ass, nom_grup, email, login);
+        							}
+        							else {
+        								log.warn("Correu no enviat, ass. "+codi_ass+" amb resp. "+login+" sense correu (cadena buida)");
+        							}
+        						}
+        						else {
+        							log.warn("Correu no enviat, ass. "+codi_ass+" amb resp. "+login+" sense correu (cadena null)");
+        						}
+        					}
+        					else {
+        						log.warn("Correu no enviat, ass. "+codi_ass+" sense professor responsable (cadena buida)");
+        					}
+        				}
+        				else {
+        					log.warn("Correu no enviat, ass. "+codi_ass+" sense professor responsable (cadena null)");
+        				}
+        				try {
+        						sakaiStatement2 = sakaiConnection.prepareStatement(sqlUpdateEstat);   						
+        						// update a estat 2 si s'ha enviat la notificació 
+        						if (mailEnviat) {	 
+        									sakaiStatement2.setInt(1,2);
+        									sakaiStatement2.setString(2, dataStr);
+        									sakaiStatement2.setString(3, codi_ass);
+        									sakaiStatement2.setString(4, codi_grup);				
+        							}
+        						else {
+        								// update a estat 3 si no hi ha responsable o no s'ha enviat el correu
+        								sakaiStatement2.setInt(1,3);
+        								sakaiStatement2.setString(2, dataStr);
+        								sakaiStatement2.setString(3, codi_ass);
+        								sakaiStatement2.setString(4, codi_grup);				
+        						}
+        					  sakaiStatement2.executeUpdate();		    	  				
+							  // després de cada actualització fem commit
+							  sakaiConnection.commit();
+							  sakaiStatement2.close();
+        				}catch (SQLException e) {
+   	    	            	log.error("EXCEPCIO SQL executar update notificacio grup nou ");
+   	    	                log.error("SQLException: " +e);
+   	    	            }	
    	  			}
 	            				    	  		
         }
@@ -323,7 +348,7 @@ public class notificaGrupsNous implements Job {
 		
 	private boolean enviaNotificacio(String codi_ass, String codi_grup, String nom_ass, String nom_grup, String to, String login)
 					throws JobExecutionException {
-		System.out.println("Dins envia notificacio " +codi_ass+" "+nom_ass+" "+codi_grup+" "+nom_grup+" "+to+" " );
+		log.debug("Dins envia notificacio " +codi_ass+" "+nom_ass+" "+codi_grup+" "+nom_grup+" "+to+" " );
 		
 		try{
 			
@@ -342,7 +367,7 @@ public class notificaGrupsNous implements Job {
 		}
 		catch (Exception e)
 			{
-				log.warn(this + " cannot find user " + login);
+				log.warn("Correu no enviat, no existeix usuari " + login);
 				return false;
 		}			
 		
