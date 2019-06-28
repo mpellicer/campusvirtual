@@ -61,7 +61,7 @@ public class canviAnyDoctorat implements Job {
 			canviAnyDoctorat.class.getName());
 
 	static String  sqlSelectEspaisDOT = "SELECT DISTINCT CODI_ASS, CODI_GRUP FROM UDL_CM_ESTATS_GRUPS_DOT WHERE ESTAT = 0";
-	static String  sqlUpdateEstatDOT = "UPDATE UDL_CM_ESTATS_GRUPS_DOT SET ESTAT = 1 WHERE CODI_ASS = ?";
+	static String  sqlUpdateEstatDOT = "UPDATE UDL_CM_ESTATS_GRUPS_DOT SET ESTAT = 2 WHERE CODI_GRUP = ?";
 
 		
 	// public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm";
@@ -216,11 +216,92 @@ public class canviAnyDoctorat implements Job {
     						log.error("EXCEPCIO (Al desar "+idSite+")");
     		                log.error("Exception: " +ex2);
     					}
+        				
+        				
+        				//Eliminem la section de l'espai de coordinació de doctorat
+        				
+    	  				String idCoordDOT = "coordDOT";
+        				idSection = rst.getString("CODI_GRUP");
+        				log.debug("Tractem "+idSection+" de l'espai "+idCoordDOT);
+        				site = instanciaSiteService.getSite(idCoordDOT);
+        				proveidorSite = site.getProviderGroupId();
+        				nouProveidorSite = null;
+        				log.debug("Proveïdor actual del site "+proveidorSite);
+        				
+        				if (proveidorSite.contains(idSection+"+")) {
+        					nouProveidorSite = proveidorSite.replace(idSection+"+", "");
+        				}
+        				else if (proveidorSite.contains("+"+idSection)) {
+        					nouProveidorSite = proveidorSite.replace("+"+idSection, "");
+        				}
+        				else {
+        					log.debug("El proveïdor del site no conté la section eliminada");
+        				}
+        				if (nouProveidorSite != null) {
+        					log.debug("El nou proveïdor és "+nouProveidorSite);
+        					try {
+        						String realm = site.getReference();
+            					log.debug("Editem el realm "+realm+" del site "+idCoordDOT);
+            					AuthzGroup realmEdit = instanciaAuthzGroupService.getAuthzGroup(realm);
+            					realmEdit.setProviderGroupId(nouProveidorSite);
+            					instanciaAuthzGroupService.save(realmEdit);
+        					}
+        					catch (Exception e) {  
+        						log.error("EXCEPCIO (Error amb l'edició del realm del site)");
+        						log.error(e.getClass().getName() + " :: " + e.getMessage());
+        					}
+        				}
+        				log.debug("Eliminem el grup i el realm que corresponen a la secció donada de baixa");
+        				for (Iterator iGroups = site.getGroups().iterator(); iGroups.hasNext();) {
+        					Group group = (Group) iGroups.next();
+        					String refGrup = group.getReference();
+        					try {
+        						AuthzGroup gRealm = instanciaAuthzGroupService.getAuthzGroup(refGrup);
+        						String gProviderId = gRealm.getProviderGroupId();
+        						if (gProviderId != null && !gProviderId.isEmpty()) {
+        							if (gProviderId.equals(idSection)) {
+        								log.debug("Aquest grup té com a proveïdor la secció "+idSection);
+        								if (!instanciaCourseManagementService.isSectionDefined(idSection)) {
+        									log.debug("La secció "+idSection+" ja no existeix a CM.");
+        									log.debug("Eliminem el realm "+refGrup);
+            								instanciaAuthzGroupService.removeAuthzGroup(refGrup);
+            								deleteGroup = true;
+            								if(grToDel == null)
+            									grToDel = new ArrayList<Group>();
+            								grToDel.add(group);
+        								}
+        							}
+        						}
+        					}
+        					catch (Exception ex1) {
+        						log.error("EXCEPCIO (Amb el grup "+refGrup+")");
+        		                log.error("Exception: " +ex1);
+        					}
+        				}
+        				try {
+        					log.debug("Desem el site "+idCoordDOT);
+            				instanciaSiteService.save(site);
+            				if(deleteGroup){
+            					log.debug("Eliminem el grup del site");
+            					for (Group gd : grToDel){
+            						site.removeGroup(gd);
+            					}
+            					instanciaSiteService.save(site);
+            					grToDel.clear();
+            				 }
+            				deleteGroup = false;
+        				}
+        				catch (Exception ex2) {
+    						log.error("EXCEPCIO (Al desar "+idCoordDOT+")");
+    		                log.error("Exception: " +ex2);
+    					}
+        				
+        				        				
         				//Si tot ha anat bé posem estat a 1
                 		try {	  				
             					PreparedStatement sakaiStatement2 = null;
             					sakaiStatement2 = sakaiConnection.prepareStatement(sqlUpdateEstatDOT);        		            					
-            					sakaiStatement2.setString(1,idSite);  
+            					sakaiStatement2.setString(1,idSection);  
             					sakaiStatement2.executeUpdate();    	    	  					            				
             							    	    	  				
             		  			// després de cada actualització fem commit
